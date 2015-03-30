@@ -1,6 +1,6 @@
 # website
-My website (geoffrey.webhop.me)
-===============================
+## My website (geoffrey.webhop.me) ##
+
 Instructions:
 
 1.  Clone this repository
