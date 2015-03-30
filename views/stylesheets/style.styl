@@ -1,0 +1,162 @@
+@import 'nib'
+@import 'nib/gradients'
+
+body
+  background linear-gradient(top,#D4D4BE,#FFF) repeat-x
+  font-family "verdana", "Helvetica Neue", "Lucida Grande", "Arial"
+  font-size 15px
+  text-stroke 1px rgba(255, 255, 255, 0.1)
+  color #555
+  //margin 85 px
+  
+.navbar .divider-vertical
+    height: 50px;
+    margin: 0 9px;
+    border-right: 1px solid #ffffff;
+    border-left: 1px solid #f2f2f2;
+
+.navbar-inverse .divider-vertical 
+    border-right-color: #222222;
+    border-left-color: #111111;
+
+
+@media (max-width: 767px)
+    .navbar-collapse .nav > .divider-vertical
+        display: none;
+  
+
+
+#navbar
+  //height 400px
+  font-size 20px
+
+//nav
+//  width 900 px 
+
+ 
+#mainbody
+  //background-color #D9DDFD
+  //background-color #B5DDFD
+  //background linear-gradient(top,#B5DDFD,#FFF) repeat-x
+  margin 125 px
+  margin-left 85px
+  //width 1000 px
+  
+h1, h2
+  margin 0
+  font-size 22px
+  color #343434
+  text-shadow 0px 1px 1px #666
+  &:hover
+    color #48538C
+    
+h1
+  text-shadow 1px 2px 2px #666
+  font-size 45px
+  text-transform uppercase
+  
+#articles
+  text-align left
+  margin-left auto
+  margin-right auto
+  width 320px
+  .article
+    margin 20px
+    .created_at
+        display none
+    .title
+        font-weight bold
+        text-decoration underline
+        background-color #eee
+    .body
+        background-color #D9DDFD
+        
+#geoff
+  p
+    background-color #9BAFFF
+    font-weight bold
+    margin-left auto
+    margin-right auto
+    width 700px
+    padding 14px
+    color #000
+        
+#wrapper
+  padding-left: 250px
+  position: relative
+  //background: #4EA985
+  width 810 px
+  
+#magnify
+    z-index 1
+    position absolute
+    margin 232px
+    margin-left 187px
+   
+#icon 
+    z-index 1
+    position absolute
+    margin 10px
+ 
+#logo
+  width: 250px
+  margin: 20px
+  background: #003073
+
+#userList
+    margin-left auto
+    margin-right auto
+    
+    table
+        border-collapse: separate
+        border-spacing: 1px
+        background: #CCC
+        widght 250px
+
+        th
+            background: #EEE
+            font-weight: 600
+            padding: 10px 20px
+            text-align: center
+
+        tbody
+            padding: 0
+            margin: 0
+            border-collapse: collapse
+            border-spacing: 0px
+            width 50px
+
+        td
+            background: #FFF
+            padding: 5px 10px
+            text-align: center
+            width 50px
+
+#userInfo
+  width: 150px
+  position: absolute
+  left: 20px
+  top 20px
+
+  p
+    width 200px
+    padding: 15px
+    border: 1px solid #CCC
+    background: rgba(80,120,255,0.05)
+  
+#addUser
+  padding: 5px 10px
+  text-align: center
+  width 500px
+  
+#photo
+  image '/images/Geoffrey_portrait.jpg' 200px 2000px
+
+#links
+    margin 20px
+    margin-left 50px
+  
+footer
+  margin 4px
+  &:hover
+    font-weight bold
