@@ -4,15 +4,24 @@ block content
 
   //indicate that our site is mobile optimized
   meta(name='viewport', content='width=device-width, initial-scale=.37')
+  
+  script(type="text/javascript").
+    function showColor() {
+        document.getElementById("portrait").src = '/images/Geoffrey_portrait_small.jpg';
+    }
+    function removeColor() {
+        document.getElementById("portrait").src = '/images/Geoffrey_portrait_small_sepia.jpg';
+    }
     
   #mainbody
     #icon
-        img(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me")
+        img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me", onMouseOver="showColor()", onMouseOut="removeColor()")
         //&:onhover
-        //    img(src='/images/Geoffrey_portrait_small.jpg', alt="Picture of Geoff", title="Me")
+        img#colorPortrait(src='/images/Geoffrey_portrait_small.jpg', alt="Picture of Geoff", title="Me", style="display: none;")
     #magnify
         a(href="/images/Geoffrey_portrait.jpg")
             img(src='/images/magnifying_glass_small.png', alt='Zoom-in', title='View full size JPEG')
+        
         
     #wrapper
         h1= title
