@@ -8,13 +8,9 @@ block content
     
   #mainbody
     #icon
-        img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me")
-        //img#colorPortrait(src='/images/Geoffrey_portrait_small.jpg', alt="Picture of Geoff", title="Me", style="display: none;")
-    #magnify
-        a(href="/images/Geoffrey_portrait.jpg")
-          span(style='cursor: cell')
-            img(src='/images/magnifying_glass_small.png', alt='Zoom-in', title='View full size JPEG')
-        
+        a(href="/images/Geoffrey_portrait.jpg", style='cursor: zoom-in')
+          img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me")
+        //img#colorPortrait(src='/images/Geoffrey_portrait_small.jpg', alt="Picture of Geoff", title="Me")
         
     #wrapper
         h1= title
