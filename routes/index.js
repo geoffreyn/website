@@ -18,6 +18,11 @@ router.get('/geoffrey',function(req, res, next) {
   res.render('geoffrey', { title: 'Geoffrey Newman' });
 });
 
+/* GET Beta version of Geoff's page. */
+router.get('/beta',function(req, res, next) {
+    res.render('beta', { title: 'Wacky Javascript enhanced version of Geoff-Page' });
+});
+
 /* GET Geoff's link. */
 router.get('/links',function(req, res, next) {
   res.render('links', { title: 'Links listed on my website' });

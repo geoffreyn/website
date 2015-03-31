@@ -1,0 +1,51 @@
+extends layout
+
+block content
+
+  //indicate that our site is mobile optimized
+  meta(name='viewport', content='width=device-width, initial-scale=.37')
+  
+  script(type="text/javascript").
+    function showColor() {
+        document.getElementById("portrait").src = '/images/Geoffrey_portrait_small.jpg';
+    };
+    function removeColor() {
+        document.getElementById("portrait").src = '/images/Geoffrey_portrait_small_sepia.jpg';
+    };
+
+  #mainbody
+    #icon
+        img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me", onMouseOver="showColor()", onMouseOut="removeColor()")
+        //img#colorPortrait(src='/images/Geoffrey_portrait_small.jpg', alt="Picture of Geoff", title="Me", style="display: none;")
+    #magnify
+        a(href="/images/Geoffrey_portrait.jpg")
+            img(src='/images/magnifying_glass_small.png', alt='Zoom-in', title='View full size JPEG')
+        
+        
+    #wrapper
+        h1= title
+        
+        p
+            | Geoffrey is a graduate student at Johns Hopkins University doing research in the 
+            a(href='http://neuroengineering.bme.jhu.edu') Neuroengineering & Biomedical Instrumentation Lab.
+            br
+            | Geoffrey is a PhD candidate with a graduation date in September of 2015.
+        br
+        a(href='files/geoff_newman_resume_3-19-2015.pdf') Download my Resume.
+        br
+        br
+        a(href='files/geoff_cv.html') View
+        |  or 
+        a(href='files/geoff_newman_CV_3-24-2015.pdf') Download my CV.
+        br
+        br
+        p
+        
+            | Find me on  
+            a(href='http://www.linkedin.com/pub/geoffrey-newman/14/407/481/en'): img#linkedinlink(src='/images/Linkedin_transparent_small.gif', title='I am on linked in!', alt='Linkedin') 
+            | , or send me an  
+            a(href='mailto:geoffrey.nemwan@gmail.com'): img#emailLogo(src='/images/email.png', title='geoffrey.nemwan@gmail.com', alt='E-mail')
+            | .
+        br
+        br
+        br
