@@ -41,16 +41,19 @@ block content
         return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
     }
     // End Color text functions
+    
   #mainbody
     #icon
+      span(style='cursor: crosshair')
         img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me", onMouseOver="showColor()", onMouseOut="removeColor()")
         //img#colorPortrait(src='/images/Geoffrey_portrait_small.jpg', alt="Picture of Geoff", title="Me", style="display: none;")
         center
-            h3#colorText(style='display: none;') 
+            h2#colorText(style='display: none;') 
                 script.
                     colorText('In living color!');
     #magnify
         a(href="/images/Geoffrey_portrait.jpg")
+          span(style='cursor: cell')
             img(src='/images/magnifying_glass_small.png', alt='Zoom-in', title='View full size JPEG')
         
         
