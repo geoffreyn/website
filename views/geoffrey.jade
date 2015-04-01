@@ -4,13 +4,21 @@ block content
 
   //indicate that our site is mobile optimized
   meta(name='viewport', content='width=device-width, initial-scale=.37')
-  
+    
+  //include Magnific-Popup script to resize portrait  
+  link(rel='stylesheet',href='magnific-popup/magnific-popup.css')
+  script(src='magnific-popup/jquery.magnific-popup.js')
+    
+  script(type='text/javascript').
+    $(document).ready(function() {
+        $('.image-link').magnificPopup({type:'image'});
+    });  
+    
     
   #mainbody
     #icon
-        a(href="/images/Geoffrey_portrait.jpg", style='cursor: zoom-in')
-          img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me")
-        //img#colorPortrait(src='/images/Geoffrey_portrait_small.jpg', alt="Picture of Geoff", title="Me")
+      a(class="image-link" href="/images/Geoffrey_portrait.jpg")
+        img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me",style='cursor: zoom-in')
         
     #wrapper
         h1= title
@@ -32,9 +40,13 @@ block content
         p
         
             | Find me on  
+            //a(href='http://www.linkedin.com/pub/geoffrey-newman/14/407/481/en'): img#linkedinlink(src='/images/Linkedin_white_54px.png', title='I am on linked in!') 
+            //a(href='http://www.linkedin.com/pub/geoffrey-newman/14/407/481/en') Linked In
             a(href='http://www.linkedin.com/pub/geoffrey-newman/14/407/481/en'): img#linkedinlink(src='/images/Linkedin_transparent_small.gif', title='I am on linked in!', alt='Linkedin') 
             | , or send me an  
+            //a(href='mailto:geoffrey.nemwan@gmail.com'): img#emailLogo(src='/images/email_logo.png', title='geoffrey.nemwan@gmail.com')
             a(href='mailto:geoffrey.nemwan@gmail.com'): img#emailLogo(src='/images/email.png', title='geoffrey.nemwan@gmail.com', alt='E-mail')
+            //a(href='mailto:geoffrey.nemwan@gmail.com') E-mail
             | .
         br
         br
