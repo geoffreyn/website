@@ -31,12 +31,17 @@ block content
                 }
             }
         });
+        $('.open-popup-link').magnificPopup({
+            type:'inline',
+            midClick: true,
+        });
+  
     });  
-    
+
     
   #mainbody
     #icon
-      a(class="image-link" href="/images/Geoffrey_portrait.jpg")
+      a(class="image-link", href="/images/Geoffrey_portrait.jpg")
         img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me",style='cursor: zoom-in')
         
     #wrapper
@@ -51,7 +56,9 @@ block content
         a(href='files/geoff_newman_resume_3-19-2015.pdf') Download my Resume.
         br
         br
-        a(href='files/geoff_cv.html') View
+        div(id="test-popup" class="white-popup mfp-hide")
+            iframe(src="files/geoff_cv.html" seamless)
+        a( href="files/geoff_cv.html", data-mfp-src="#test-popup", class="open-popup-link") View
         |  or 
         a(href='files/geoff_newman_CV_3-24-2015.pdf') Download my CV.
         br

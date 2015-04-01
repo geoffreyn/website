@@ -24,6 +24,33 @@ body
     .navbar-collapse .nav > .divider-vertical
         display: none;
   
+.white-popup {
+  position: fixed;
+  top: 30px;
+  right: 5%;
+  max-width: 950px
+  width: 100%;
+  height: 95%;
+  background: #FFF;
+  padding: 0px;
+  margin: 0px auto;
+}
+
+/* iframe's parent node */
+div#test-popup {
+    position: fixed;
+    width: 100%;
+    height: 95%;
+}
+
+/* iframe itself */
+div#test-popup > iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}  
+  
 .mfp-with-zoom .mfp-container,
 .mfp-with-zoom.mfp-bg {
   opacity: 0;
