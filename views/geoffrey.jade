@@ -1,9 +1,6 @@
 extends layout
 
 block content
-
-  //indicate that our site is mobile optimized
-  meta(name='viewport', content='width=device-width, initial-scale=.37')
     
   //include Magnific-Popup script to resize portrait  
   link(rel='stylesheet',href='magnific-popup/magnific-popup.css')
@@ -45,6 +42,7 @@ block content
         img#portrait(src='/images/Geoffrey_portrait_small_sepia.jpg', alt="Picture of Geoff", title="Me",style='cursor: zoom-in')
         
     #wrapper
+    
         h1= title
         
         p

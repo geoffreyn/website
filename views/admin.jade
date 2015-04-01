@@ -10,6 +10,12 @@ block content
       h3
         | But here･s a wall of text so we can test the stalker navbar
       p
-        each val in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-          | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse scelerisque dui a sem aliquam, vitae cursus risus convallis. Proin varius, sem vel bibendum iaculis, ex ex lacinia odio, at efficitur lectus elit ornare lorem. Quisque auctor ut leo id congue. Vivamus ut ullamcorper dui. Aenean porttitor massa vel mi malesuada pellentesque. Integer urna quam, ullamcorper eget nisl mattis, scelerisque viverra leo. Suspendisse faucibus turpis vitae tincidunt congue. Sed elit quam, feugiat eu consectetur sit amet, fermentum et purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce viverra orci quis lectus pellentesque blandit. Ut convallis malesuada nisi, eget scelerisque arcu semper sed. Sed a sem lorem. Donec facilisis condimentum nisl eu consectetur. Etiam in velit elementum, gravida lectus at, tincidunt dolor. Cras magna arcu, accumsan eu pulvinar at, suscipit semper risus. Pellentesque nec mi quam.
-          | Vestibulum tincidunt vel odio vel pulvinar. Curabitur eget efficitur est, quis lacinia nisi. Sed in mi pretium, iaculis velit et, aliquet ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis eu dolor mauris. Curabitur sagittis augue ut ligula posuere, eu condimentum quam elementum. Nullam sed ultrices quam.
+         - for (var n=0; n<20; n++)
+             | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse scelerisque dui a sem aliquam, vitae cursus risus convallis. Proin varius, sem vel bibendum iaculis, ex ex lacinia odio, at efficitur lectus elit ornare lorem. Quisque auctor ut leo id congue. Vivamus ut ullamcorper dui. Aenean porttitor massa vel mi malesuada pellentesque. Integer urna quam, ullamcorper eget nisl mattis, scelerisque viverra leo. Suspendisse faucibus turpis vitae tincidunt congue. Sed elit quam, feugiat eu consectetur sit amet, fermentum et purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce viverra orci quis lectus pellentesque blandit. Ut convallis malesuada nisi, eget scelerisque arcu semper sed. Sed a sem lorem. Donec facilisis condimentum nisl eu consectetur. Etiam in velit elementum, gravida lectus at, tincidunt dolor. Cras magna arcu, accumsan eu pulvinar at, suscipit semper risus. Pellentesque nec mi quam.
+             | Vestibulum tincidunt vel odio vel pulvinar. Curabitur eget efficitur est, quis lacinia nisi. Sed in mi pretium, iaculis velit et, aliquet ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis eu dolor mauris. Curabitur sagittis augue ut ligula posuere, eu condimentum quam elementum. Nullam sed ultrices quam.
+         - var i = 0, j = 0
+            while i < 10
+             - j = 0;
+             ul= i++
+              while j < 15
+                li= j++

@@ -20,7 +20,6 @@ var users = require('./routes/users');
 var geoffapp = connect();
 var mainapp = connect();
 
-
 geoffapp.use(function(req, res, next) {
     var username = 'geoffrey';
     
