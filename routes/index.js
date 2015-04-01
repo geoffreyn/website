@@ -28,6 +28,11 @@ router.get('/links',function(req, res, next) {
   res.render('links', { title: 'Links listed on my website' });
 });
 
+/* GET Geoff's embeded flickr album. */
+router.get('/flickr_album',function(req, res, next) {
+  res.render('flickr_album', { title: 'My Flickr Album' });
+});
+
 // Authenticator - Asynchronous
 var auth = basicAuth(function(user, pass, callback) {
  var result = (user === 'admin' && pass === 'password');
