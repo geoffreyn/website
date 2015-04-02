@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var nib = require('nib');
 var stylus = require('stylus');
-var gm = require('gm');
 var connect = require('connect')
 var vhost = require('vhost');
 
@@ -40,7 +39,6 @@ var app = express();
 app.use(vhost('geoffrey.webhop.me', geoffapp));
 app.use(vhost('geoff.webhop.me', geoffapp));
 app.use(vhost('firetree.ddns.net', mainapp));
-//app.use(vhost('firetree.ddns.net', mainapp));
 
 
 function compile(str, path) {
@@ -49,9 +47,6 @@ function compile(str, path) {
     .set('compress', true)
     .use(nib());
 }
-
-//gm('/public/images/Geoffrey_portrait_small.jpg').resize(353, 257).sepia().autoOrient();
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -62,7 +57,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-//app.use(require('stylus').middleware({
 app.use(stylus.middleware({
     src: __dirname + '/views/stylesheets',
     dest: __dirname + '/public/stylesheets',
