@@ -40,7 +40,7 @@ var auth = basicAuth(function(user, pass, callback) {
 
 /* New Admin page. */
 router.get('/admin',auth,function(req, res, next) {
-    res.render('admin', {title: 'Acess Analytics'});
+    res.render('admin', {title: 'Access Analytics'});
 });
 
 /* GET blank layout for those authorized. */
