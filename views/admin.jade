@@ -2,49 +2,76 @@ extends layout
 
 block content
   #mainbody
-    #wrapper
-      h1= title
-     
-      div(class="container")
-        div(class="row-fluid")
-            div(id="content" class="span12")
+     #wrapper
+       h1= title
+       #userInfo
+       //.
+            #accessInfo
+                h2 Access Info
+                p
+                    strong Address : 
+                    |  <span id='accessInfoAddress'></span>
+                    br
+                    strong IP : 
+                    |  <span id='accessInfoIP'></span>
+                    br
+                    strong Time : 
+                    |  <span id='accessInfoTime'></span>
+
+       p
+         div(class="container")
+            div(class="row-fluid")
+              div(id="content" class="span12")
 
 
                 div(class="well span3" style="text-align: center;")
                         h3
-                            Right Now
+                           | Right Now
                         p(id="connections" style="font-size: 96px;line-height: 96px;")
-                            0
+                           | 0
                         h5
-                            active visitors
+                           | active visitors
 
                 div(class="span9")
 
                     legend
-                        Real Time Activity
+                        | Real Time Activity
                     div(class="row-fluid")
                         table(id="visits" class="table table-bordered table-striped table-condensed")
                             thead
                                 tr
                                     td
-                                        URL
+                                       | URL
                                     td
-                                        IP
+                                       | IP
                                     td
-                                        Timestamp
+                                       | Timestamp
                             tbody
 
                 legend
-                    Page Views
+                    | Page Views - While you've had this window open
                 div(class="row-fluid")
                    table(id="pageViews" class="table table-bordered table-striped table-condensed")
                         thead
                             tr
                                 td
-                                    URL
+                                   | URL
                                 td
-                                    Page Views
+                                   | Page Views
                         tbody
+                        
+                        
+       #userList
+        h2 Historic Log
+        #accessTable
+            table
+                thead
+                    th Address
+                    th IP
+                    th Time
+                tbody
+
+
     //.
       h3
         | But here･s a wall of text so we can test the stalker navbar

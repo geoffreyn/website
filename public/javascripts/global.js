@@ -1,12 +1,17 @@
 // Userlist data array for filling in info box
 var userListData = [];
-
+var accessListData = [];
+var socket = io.connect();
+    
 // DOM ready ============================================
 $(document).ready(function() {
-
+    
     // Populate the user table on intial page load
     populateTable();
 
+    // Populate Log
+    populateAccessTable();
+    
     // Username link click
     $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 
@@ -35,6 +40,13 @@ $(document).ready(function() {
     });
     */
     
+    console.log('Global socket connected');
+    socket.on('pageview', function (msg) {
+        if (msg.url) {
+            console.log('Received at global.js');
+            appendTable(msg);
+        }
+    });
 });
 
 // Functions ============================================
@@ -197,4 +209,56 @@ function deleteUser(event) {
 
     }
 
+};
+
+// Fill table with data
+function populateAccessTable() {
+
+    // Empty content string
+    var tableContent = '';
+
+    // jQuery AJAX call for JSON
+    $.getJSON( '/analytics/accessList', function( data ) {
+
+        // For each item in our JSON, add a table row and cells to the content string
+           accessListData = data;
+           $.each(data, function() {
+           tableContent += '<tr>';
+           tableContent += '<td>' + this.accessInfoAddress + '</td><td>' + this.accessInfoIP + '</td>';
+           tableContent += '<td>' + this.accessInfoTime + '</td>';
+           tableContent += '</tr>';
+        });
+
+        // Inject the whole content string into our existing HTML table
+        $('#accessTable table tbody').html(tableContent);
+    });
+};
+
+function appendTable(msg) {
+    console.log('Socket-DB appended');
+     
+    var newAccess = {
+            'accessInfoAddress': msg.url,
+            'accessInfoIP': msg.ip,
+            'accessInfoTime': msg.timestamp
+    }
+    
+    // Use AJAX to post the object to our adduser service
+    $.ajax({
+        type: 'POST',
+        data: newAccess,
+        url: '/analytics/addAccess',
+        dataType: 'JSON'
+        
+    }).done(function( response ) {
+        // Check for successful (blank) response
+        if (response.msg === '') {
+            // Update the table
+            populateAccessTable();
+        }
+        else {
+            // If something goes wrong, alert the error message that our service returned
+            alert('Error: ' + response.msg);
+        }
+    });
 };

@@ -15,6 +15,7 @@ var db = mongo.db("mongodb://localhost:27017/website", {native_parser:true});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var analytics = require('./routes/analytics');
 
 var geoffapp = connect();
 var mainapp = connect();
@@ -82,6 +83,7 @@ app.use(function(req,res,next) {
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/analytics', analytics);
 
 io.use(function(socket, next) {
   var handshake = socket.request;
@@ -90,8 +92,6 @@ io.use(function(socket, next) {
     // next(new Error('not authorized');
   // else just call next
   next();
-  
-  console.log('Handshake');
 });
 
 io.sockets.on('connection', function (socket) {
@@ -102,14 +102,13 @@ io.sockets.on('connection', function (socket) {
         url = message;
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
     });
- 
+
     socket.on('disconnect', function () {
         console.log("Socket disconnected");
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});
     });
- 
-});
 
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
