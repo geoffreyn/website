@@ -1,12 +1,13 @@
+body{ width: 875px;}
+div{ max-width: 800px; }
  
 /* start css.sty */
 .cmbx-12x-x-207{font-size:248%; font-weight: bold;}
 .cmbx-12x-x-207{ font-weight: bold;}
 .cmbx-10{ font-weight: bold;}
-.cmbx-10{ font-weight: bold;}
 .cmti-10{ font-style: italic;}
-p.noindent { text-indent: 0em }
-td p.noindent { text-indent: 0em; margin-top:0em; }
+p.noindent { text-indent: 0em; margin-left: 0;}
+td p.noindent { text-indent: 0em; margin-top:0em;}
 p.nopar { text-indent: 0em; }
 p.indent{ text-indent: 1.5em }
 @media print {div.crosslinks {visibility:hidden;}}
@@ -68,7 +69,7 @@ table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
 .tabbing-right {text-align:right;}
 span.TEX {letter-spacing: -0.125em; }
 span.TEX span.E{ position:relative;top:0.5ex;left:-0.0417em;}
-a span.TEX span.E {text-decoration: none; }
+a span.TEX span.E {text-decoration: none; width: 400px; }
 span.LATEX span.A{ position:relative; top:-0.5ex; left:-0.4em; font-size:85%;}
 span.LATEX span.TEX{ position:relative; left: -0.4em; }
 div.float, div.figure {margin-left: auto; margin-right: auto;}
@@ -118,8 +119,9 @@ div.section {margin-left:3em;}
 .center-addresses {width:100%}
 .line-address {text-align:right;}
 table.section td{ vertical-align:top;}
-td.section {padding-right:2em; width:20%;}
+td.section {min-width: 150px}
 table.section {margin-top:1em;}
 .position table {width:100%;}
+.section-body {margin-top:1em;}
 /* end css.sty */
 
