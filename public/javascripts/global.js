@@ -8,9 +8,6 @@ $(document).ready(function() {
     
     // Populate the user table on intial page load
     populateTable();
-
-    // Populate Log
-    populateAccessTable();
     
     // Username link click
     $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
@@ -20,6 +17,13 @@ $(document).ready(function() {
 
     // Delete User link click
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+    
+
+    // Populate Access Log
+    populateAccessTable();
+    
+    // Delete Access log entry link click
+    $('#accessList table tbody').on('click', 'td a.linkdeleteAccess', deleteAccess);
   
   /*
     // Search textbox enter pressed
@@ -211,6 +215,45 @@ function deleteUser(event) {
 
 };
 
+// Delete User
+function deleteAccess(event) {
+
+    event.preventDefault();
+
+    // Pop up a confirmation dialog
+    var confirmation = confirm('Are you sure you want to delete this access log entry?');
+
+    // Check and make sure the user confirmed
+    if (confirmation === true) {
+
+        // If they did, do our delete
+        $.ajax({
+            type: 'DELETE',
+            url: '/analytics/deleteAccess/' + $(this).attr('rel')
+        }).done(function( response ) {
+
+            // Check for a successful (blank) response
+            if (response.msg === '') {
+            }
+            else {
+                alert('I can haz cheezeburger, but you no delete access log entry!: ' + response.msg);
+            }
+
+            // Update the table
+            populateAccessTable();
+
+        });
+
+    }
+    else {
+
+        // If they said no to the confirm, do nothing
+        return false;
+
+    }
+
+};
+
 // Fill table with data
 function populateAccessTable() {
 
@@ -226,11 +269,12 @@ function populateAccessTable() {
            tableContent += '<tr>';
            tableContent += '<td>' + this.accessInfoAddress + '</td><td>' + this.accessInfoIP + '</td>';
            tableContent += '<td>' + this.accessInfoTime + '</td>';
+           tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '">delete</a></td>';
            tableContent += '</tr>';
         });
 
         // Inject the whole content string into our existing HTML table
-        $('#accessTable table tbody').html(tableContent);
+        $('#accessList table tbody').html(tableContent);
     });
 };
 
