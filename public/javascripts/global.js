@@ -267,9 +267,9 @@ function populateAccessTable() {
            accessListData = data;
            $.each(data, function() {
            tableContent += '<tr>';
-           tableContent += '<td>' + this.accessInfoAddress + '</td><td>' + this.accessInfoIP + '</td>';
-           tableContent += '<td>' + this.accessInfoTime + '</td>';
-           tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '">delete</a></td>';
+           tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
+           tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
+           tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
            tableContent += '</tr>';
         });
 
