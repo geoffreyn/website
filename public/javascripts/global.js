@@ -223,12 +223,15 @@ function populateAccessTable() {
 
         // For each item in our JSON, add a table row and cells to the content string
            accessListData = data.reverse();  // Put oldest log on top
-           $.each(data, function() {
-           tableContent += '<tr>';
-           tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
-           tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
-           tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
-           tableContent += '</tr>';
+           $.each(data, function( index ) {
+               if (index < 25) {
+                   tableContent += '<tr>';
+                   tableContent += '<td><font size="4">' + (index+1) + '</font></td>';
+                   tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
+                   tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
+                   tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
+                   tableContent += '</tr>'; 
+               }
         });
 
         // Inject the whole content string into our existing HTML table
@@ -237,7 +240,7 @@ function populateAccessTable() {
 };
 
 function appendTable(msg) {
-    console.log('Socket-DB appended');
+    //console.log('Socket-DB appended');
      
     var newAccess = {
             'accessInfoAddress': msg.url,

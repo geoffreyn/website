@@ -62,10 +62,11 @@ block content
                         
                         
 
-         h2 Historic Log
+         h2 Last 25 Access Log Entries
          #accessList
             table
                 thead
+                    th Number
                     th Address
                     th IP
                     th Time
@@ -93,7 +94,7 @@ block content
     var lastPageId = 0;
     populateAccessTable();
     socket.on('connect', function () {
-        console.log('Socket connected');
+        //console.log('Socket connected');
         socket.on('pageview', function (msg) {
             $('#connections').html(msg.connections);
             if (msg.url) {
