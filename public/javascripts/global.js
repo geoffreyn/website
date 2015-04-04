@@ -229,6 +229,7 @@ function populateAccessTable() {
                    tableContent += '<td><font size="4">' + (index+1) + '</font></td>';
                    tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
                    tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
+                   tableContent += '<td><font size="3">' + this.accessLocation.country + '</font></td><td><font size="3">' + this.accessLocation.region + '</font></td>'
                    tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
                    tableContent += '</tr>'; 
                }
@@ -245,7 +246,8 @@ function appendTable(msg) {
     var newAccess = {
             'accessInfoAddress': msg.url,
             'accessInfoIP': msg.ip,
-            'accessInfoTime': msg.timestamp
+            'accessInfoTime': msg.timestamp,
+            'accessLocation': msg.location
     }
     
     // Use AJAX to post the object to our adduser service

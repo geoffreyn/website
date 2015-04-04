@@ -8,6 +8,7 @@ var nib = require('nib');
 var stylus = require('stylus');
 var connect = require('connect')
 var vhost = require('vhost');
+var geoip = require('geoip-lite'); 
  
 var basicAuth = require('basic-auth-connect');
 
@@ -105,16 +106,16 @@ io.use(function(socket, next) {
 });
 
 io.sockets.on('connection', function (socket) {
+    ip = socket.handshake.address;
     
     socket.on('message', function (message) {
-        //console.log("Got message: " + message);
-        ip = socket.handshake.address;
+        console.log("Got message from: " + ip);
         url = message;
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
+        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'location': geoip.lookup(ip),'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
     });
 
     socket.on('disconnect', function () {
-        console.log("Socket disconnected");
+        console.log("Socket disconnection from: " + ip + ' in: ' + geoip.lookup(ip).country + '/' + geoip.lookup(ip).region);
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});
     });
 

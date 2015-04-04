@@ -70,6 +70,8 @@ block content
                     th Address
                     th IP
                     th Time
+                    th Country
+                    th Region
                     th Delete
                 tbody
 
@@ -92,10 +94,10 @@ block content
     var socket = io.connect();
     var pages = {};
     var lastPageId = 0;
-    populateAccessTable();
     socket.on('connect', function () {
         //console.log('Socket connected');
         socket.on('pageview', function (msg) {
+            populateAccessTable();
             $('#connections').html(msg.connections);
             if (msg.url) {
                 if ($('#visits tr').length > 20) {
