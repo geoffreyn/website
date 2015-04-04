@@ -1,12 +1,78 @@
 extends layout
 
 block content
-
   #mainbody
-    #wrapper
-      h1= title
-      h2
-        | No features here yet, sorry!
+       #wrapper
+       h1= title
+       #userInfo
+       //.
+            #accessInfo
+                h2 Access Info
+                p
+                    strong Address : 
+                    |  <span id='accessInfoAddress'></span>
+                    br
+                    strong IP : 
+                    |  <span id='accessInfoIP'></span>
+                    br
+                    strong Time : 
+                    |  <span id='accessInfoTime'></span>
+
+       p
+         div(class="container")
+            div(class="row-fluid")
+              div(id="content" class="span12")
+
+
+                div(class="well span3" style="text-align: center;")
+                        h3
+                           | Right Now
+                        p(id="connections" style="font-size: 96px;line-height: 96px;")
+                           | 0
+                        h5
+                           | active visitors
+
+                div(class="span9")
+
+                    legend
+                        | Real Time Activity
+                    div(class="row-fluid")
+                        table(id="visits" class="table table-bordered table-striped table-condensed")
+                            thead
+                                tr
+                                    td
+                                       | URL
+                                    td
+                                       | IP
+                                    td
+                                       | Timestamp
+                            tbody
+
+                legend
+                    | Page Views - While you've had this window open
+                div(class="row-fluid")
+                   table(id="pageViews" class="table table-bordered table-striped table-condensed")
+                        thead
+                            tr
+                                td
+                                   | URL
+                                td
+                                   | Page Views
+                        tbody
+                        
+                        
+       #userList
+        h2 Historic Log
+        #accessTable
+            table
+                thead
+                    th Address
+                    th IP
+                    th Time
+                tbody
+
+
+    //.
       h3
         | But here･s a wall of text so we can test the stalker navbar
       p
@@ -19,3 +85,29 @@ block content
              ul= i++
               while j < 15
                 li= j++
+                
+  script.
+    var socket = io.connect();
+    var pages = {};
+    var lastPageId = 0;
+    
+    socket.on('connect', function () {
+        console.log('Socket connected');
+        socket.on('pageview', function (msg) {
+            $('#connections').html(msg.connections);
+            if (msg.url) {
+                if ($('#visits tr').length > 20) {
+                    $('#visits tr:last').remove();
+                }
+                $('#visits tbody').prepend('<tr><td>' + msg.url + '</td><td>' + msg.ip + '</td><td>' + msg.timestamp + '</td></tr>');
+                if (pages[msg.url]) {
+                    pages[msg.url].views = pages[msg.url].views + 1;
+                    $('#page' + pages[msg.url].pageId).html(pages[msg.url].views);
+                } else {
+                    pages[msg.url] = {views: 1, pageId: ++lastPageId};
+                    $('#pageViews tbody').append('<tr><td>' + msg.url + '</td><td id="page' + lastPageId + '">1</td></tr>');
+                }
+            }
+        });
+    });
+
