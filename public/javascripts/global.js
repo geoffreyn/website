@@ -160,8 +160,8 @@ function addUser(event) {
             else {
 
                 // If something goes wrong, alert the error message that our service returned
-                alert('Error: ' + response.msg);
-
+                //alert('Error: ' + response.msg);
+                console.log('Error: ' + response.msg);
             }
         });
     }
