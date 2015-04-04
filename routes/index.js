@@ -38,7 +38,7 @@ var auth = basicAuth(function(user, pass, callback) {
  callback(null /* error */, result);
 });
 
-/* New Admin page. */
+/* GET Admin page. */
 router.get('/admin',auth,function(req, res, next) {
     res.render('admin', {title: 'Access Analytics'});
 });
@@ -46,6 +46,11 @@ router.get('/admin',auth,function(req, res, next) {
 /* GET blank layout for those authorized. */
 router.get('/layout',auth,function(req, res, next) {
   res.render('layout', { title: 'Blank layout for the curious' });
+});
+
+/* GET Plotting page */
+router.get('/plots',function(req, res, next) {
+  res.render('plotting', { title: 'Data Visualization' });
 });
 
 module.exports = router;
