@@ -17,10 +17,10 @@ $(document).ready(function() {
 
     // Delete User link click
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
-    
 
+    
     // Populate Access Log
-    populateAccessTable();
+    //populateAccessTable();
     
     // Delete Access log entry link click
     $('#accessList table tbody').on('click', 'td a.linkdeleteAccess', deleteAccess);
@@ -254,6 +254,14 @@ function deleteAccess(event) {
 
 };
 
+var basicAuth = require('basic-auth-connect');
+// Authenticator - Asynchronous
+
+var auth = basicAuth(function(user, pass, callback) {
+ var result = (user === 'admin' && pass === 'password');
+ callback(null /* error */, result);
+});
+
 // Fill table with data
 function populateAccessTable() {
 
@@ -261,7 +269,7 @@ function populateAccessTable() {
     var tableContent = '';
 
     // jQuery AJAX call for JSON
-    $.getJSON( '/analytics/accessList', function( data ) {
+    $.getJSON( '/analytics/accessList', headers : { Authorization : auth }, function( data ) {
 
         // For each item in our JSON, add a table row and cells to the content string
            accessListData = data;
@@ -292,7 +300,8 @@ function appendTable(msg) {
         type: 'POST',
         data: newAccess,
         url: '/analytics/addAccess',
-        dataType: 'JSON'
+        dataType: 'JSON', 
+        headers : { Authorization : auth }
         
     }).done(function( response ) {
         // Check for successful (blank) response
