@@ -91,7 +91,7 @@ block content
     var socket = io.connect();
     var pages = {};
     var lastPageId = 0;
-    
+    populateAccessTable();
     socket.on('connect', function () {
         console.log('Socket connected');
         socket.on('pageview', function (msg) {

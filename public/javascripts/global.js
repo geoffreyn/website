@@ -2,7 +2,7 @@
 var userListData = [];
 var accessListData = [];
 var socket = io.connect();
-    
+
 // DOM ready ============================================
 $(document).ready(function() {
     
@@ -17,61 +17,19 @@ $(document).ready(function() {
 
     // Delete User link click
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
-
-    
-    // Populate Access Log
-    //populateAccessTable();
     
     // Delete Access log entry link click
     $('#accessList table tbody').on('click', 'td a.linkdeleteAccess', deleteAccess);
   
-  /*
-    // Search textbox enter pressed
-    $('#searchInput').on('keypress',function(event) {
-        key = event.which;
-        
-        if (key == 13) {
-            startSearch();
-        }
-    });
-    
-    
-    // Search button pressed
-    $('#searchA #searchBtn').on('click', function(event) {
-        event.preventDefault();
-        
-        startSearch();
-    });
-    */
-    
     console.log('Global socket connected');
     socket.on('pageview', function (msg) {
         if (msg.url) {
-            console.log('Received at global.js');
             appendTable(msg);
         }
     });
 });
 
 // Functions ============================================
-
-/*
-// Initiate google search from navbar
-function startSearch() {
-    event.preventDefault();
-
-    // Determine the Google search for the #searchBtn text
-    var newurl = 'https://www.google.com/?&gws_rd=ssl#q=site:firetree.ddns.net+' + $('#searchInput').val();
-
-    //$('#searchA').href = newurl;
-    
-    // Clear search text
-    $('#searchInput').val('');
-
-    // Navigate browser
-    window.location.href = newurl;
-};
-*/
 
 // Fill table with data
 function populateTable() {
@@ -215,7 +173,7 @@ function deleteUser(event) {
 
 };
 
-// Delete User
+// Delete Access
 function deleteAccess(event) {
 
     event.preventDefault();
@@ -239,11 +197,11 @@ function deleteAccess(event) {
                 alert('I can haz cheezeburger, but you no delete access log entry!: ' + response.msg);
             }
 
-            // Update the table
-            populateAccessTable();
-
         });
 
+        // Update the displayed log
+        populateAccessTable();
+        
     }
     else {
 
@@ -254,14 +212,6 @@ function deleteAccess(event) {
 
 };
 
-var basicAuth = require('basic-auth-connect');
-// Authenticator - Asynchronous
-
-var auth = basicAuth(function(user, pass, callback) {
- var result = (user === 'admin' && pass === 'password');
- callback(null /* error */, result);
-});
-
 // Fill table with data
 function populateAccessTable() {
 
@@ -269,10 +219,10 @@ function populateAccessTable() {
     var tableContent = '';
 
     // jQuery AJAX call for JSON
-    $.getJSON( '/analytics/accessList', headers : { Authorization : auth }, function( data ) {
+    $.getJSON( '/analytics/accessList', { user: 'admin', pass: 'password' } , function( data ) {
 
         // For each item in our JSON, add a table row and cells to the content string
-           accessListData = data;
+           accessListData = data.reverse();  // Put oldest log on top
            $.each(data, function() {
            tableContent += '<tr>';
            tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
@@ -301,13 +251,10 @@ function appendTable(msg) {
         data: newAccess,
         url: '/analytics/addAccess',
         dataType: 'JSON', 
-        headers : { Authorization : auth }
         
     }).done(function( response ) {
         // Check for successful (blank) response
         if (response.msg === '') {
-            // Update the table
-            populateAccessTable();
         }
 
         else {

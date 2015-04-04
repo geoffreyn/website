@@ -1,14 +1,13 @@
 var express = require('express');
 var router = express.Router();
+
 var basicAuth = require('basic-auth-connect');
-
-
-// Authenticator - Asynchronous
 
 var auth = basicAuth(function(user, pass, callback) {
  var result = (user === 'admin' && pass === 'password');
  callback(null /* error */, result);
 });
+
 
 /*
  * GET access list.
@@ -23,7 +22,7 @@ router.get('/accessList', auth, function(req, res) {
 /*
  * Post to access list.
  */
-router.post('/addAccess', auth, function(req, res) {
+router.post('/addAccess', function(req, res) {
   var db = req.db;
   db.collection('accessList').insert(req.body, function(err, result) {
     res.send(

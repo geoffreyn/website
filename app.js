@@ -9,6 +9,16 @@ var stylus = require('stylus');
 var connect = require('connect')
 var vhost = require('vhost');
  
+var basicAuth = require('basic-auth-connect');
+
+// Authenticator - Asynchronous
+
+var auth = basicAuth(function(user, pass, callback) {
+ var result = (user === 'admin' && pass === 'password');
+ callback(null /* error */, result);
+});
+
+
 // Database
 var mongo = require('mongoskin');
 var db = mongo.db("mongodb://localhost:27017/website", {native_parser:true});

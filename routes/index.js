@@ -1,6 +1,14 @@
 var express = require('express');
 var router = express.Router();
+
 var basicAuth = require('basic-auth-connect');
+
+
+var auth = basicAuth(function(user, pass, callback) {
+ var result = (user === 'admin' && pass === 'password');
+ callback(null /* error */, result);
+});
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -30,12 +38,6 @@ router.get('/links',function(req, res, next) {
 /* GET Geoff's embeded flickr album. */
 router.get('/flickr_album',function(req, res, next) {
   res.render('flickr_album', { title: 'My Flickr Album' });
-});
-
-// Authenticator - Asynchronous
-var auth = basicAuth(function(user, pass, callback) {
- var result = (user === 'admin' && pass === 'password');
- callback(null /* error */, result);
 });
 
 /* GET Admin page. */
