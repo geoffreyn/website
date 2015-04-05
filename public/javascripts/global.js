@@ -214,40 +214,123 @@ function deleteAccess(event) {
 
 // Fill table with data
 function populateAccessTable() {
-
+    
+    var geoTableContent = '';
+               
     // Empty content string
     var tableContent = '';
-
+    
     // jQuery AJAX call for JSON
     $.getJSON( '/analytics/accessList', { user: 'admin', pass: 'password' } , function( data ) {
 
         // For each item in our JSON, add a table row and cells to the content string
-           accessListData = data.reverse();  // Put oldest log on top
-           $.each(data, function( index ) {
-               if (index < 25) {
-                   tableContent += '<tr>';
-                   tableContent += '<td><font size="4">' + (index+1) + '</font></td>';
-                   tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
-                   tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
-                   tableContent += '<td><font size="3">' + this.accessLocation.country + '</font></td><td><font size="3">' + this.accessLocation.region + '</font></td>'
-                   tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
-                   tableContent += '</tr>'; 
+       accessListData = data.reverse();  // Put oldest log on top
+       $.each(data, function( index ) {
+           if (index < 25) {
+               tableContent += '<tr>';
+               tableContent += '<td><font size="4">' + (index+1) + '</font></td>';
+               tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
+               tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
+               if (this.hasOwnProperty('accessRegion')) {
+                   tableContent += '<td><font size="3">' + this.accessCountry + '</font></td><td><font size="3">' + this.accessRegion + '</font></td>';
                }
+               else {
+                    tableContent += '<td><font size="3">??</font></td><td><font size="3">??</font></td>';
+               }
+               tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
+               tableContent += '</tr>'; 
+           }
+      
         });
-
-        // Inject the whole content string into our existing HTML table
+        
+        // Fill variable regions with name of all regions from access logs
+        regions = [];
+        geos = [];
+        $.each(data, function(index) {
+            if (this.hasOwnProperty('accessRegion')) { 
+                    regions.push(this.accessRegion);
+                    geos.push(this.accessCountry);
+            }
+        });
+        
+        // Determine the unique regions
+        function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+        }
+        uniqueR = regions.filter(onlyUnique);
+        
+        // Count the occurance of each unique region
+        Array.prototype.count = function(value) {
+            var counter = 0;
+            for(var i=0;i<this.length;i++) {
+                if (this[i] === value) counter++;
+            }
+            return counter;
+        };
+        regionCounts = [uniqueR.length];
+        $.each(uniqueR, function( index ) {
+            regionCounts[index] = regions.count(uniqueR[index]);
+        });
+        
+        // Fill table with unique regions and counts
+        for (var i = 0; i < uniqueR.length; i++) {
+            geoTableContent += '<tr>';
+            geoTableContent += '<td><font size="3">' + geos[i] + '</font></td><td><font size="3">' + uniqueR[i] + '</font></td>';
+            geoTableContent += '<td><font size="3">' + regionCounts[i].toString() + '</font></td>';   
+        };
+        
+        
+        // Inject the whole content string into our existing HTML tables
         $('#accessList table tbody').html(tableContent);
+        
+        $('#geographyList table tbody').html(geoTableContent);
+        
+        //Determine color cycle of pie chart
+        colors = ["#949FB1", "#46BFBD", "#FDB45C","#F7464A","#949FB1"];
+        highlights = ["#A8B3C5", "#5AD3D1", "#FFC870","#FF5A5E","#A8B3C5"];
+     
+        // Create Pie Chart of first result
+        var data1 = [
+            {
+                value: regionCounts[0],
+                color: "#949FB1",
+                highlight: "#A8B3C5",
+                label: uniqueR[0]
+            }
+        ];
+        
+        // Get context with jQuery - using jQuery's .get() method.
+         var ctx = $("#myChart").get(0).getContext("2d");
+        
+        // This will get the first returned node in the jQuery collection.
+         var locationChart = new Chart(ctx).Pie(data1);
+    
+        // Pie chart is expandable for when new regions connect
+        $.each(regionCounts, function (index) {
+            if (index > 0) {
+                locationChart.addData({
+                    value: this,
+                    label: uniqueR[index],
+                    color: colors[index],
+                    highlight: highlights[index]
+                });
+            }
+        });
+        
     });
 };
 
 function appendTable(msg) {
     //console.log('Socket-DB appended');
      
+    //var locMsg = jQuery.parseJSON(JSON.stringify(msg.location));
+     
     var newAccess = {
             'accessInfoAddress': msg.url,
             'accessInfoIP': msg.ip,
             'accessInfoTime': msg.timestamp,
-            'accessLocation': msg.location
+            'accessCountry': msg.location.country,
+            'accessRegion': msg.location.region
     }
     
     // Use AJAX to post the object to our adduser service
@@ -260,6 +343,7 @@ function appendTable(msg) {
     }).done(function( response ) {
         // Check for successful (blank) response
         if (response.msg === '') {
+            console.log(msg);
         }
 
         else {

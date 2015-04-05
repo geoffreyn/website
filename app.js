@@ -111,7 +111,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('message', function (message) {
         console.log("Got message from: " + ip);
         url = message;
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'location': geoip.lookup(ip),'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
+        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'location': geoip.lookup(ip), 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
     });
 
     socket.on('disconnect', function () {
