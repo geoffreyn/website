@@ -214,11 +214,12 @@ function deleteAccess(event) {
 
 // Fill table with data
 function populateAccessTable() {
-    
-    var geoTableContent = '';
                
     // Empty content string
     var tableContent = '';
+    var repeatTableContents = '';    
+    var geoTableContent = '';
+    
     
     // jQuery AJAX call for JSON
     $.getJSON( '/analytics/accessList', { user: 'admin', pass: 'password' } , function( data ) {
@@ -246,18 +247,71 @@ function populateAccessTable() {
         // Fill variable regions with name of all regions from access logs
         regions = [];
         geos = [];
+        locers = [];
+        superdata = [];
+        count = -1;
         $.each(data, function(index) {
             if (this.hasOwnProperty('accessRegion')) { 
+                    count++;
                     regions.push(this.accessRegion);
                     geos.push(this.accessCountry);
+                    locers.push(index);
+                    superdata[count] = ({
+                        accessRegion: this.accessRegion,
+                        accessCountry: this.accessCountry,
+                        accessInfoIP: this.accessInfoIP
+                    });
+                    //superdata[count] = this;
             }
         });
         
-        // Determine the unique regions
+        function compare(a,b) {
+          if (a.accessInfoIP < b.accessInfoIP) {
+             return -1;
+          }
+          if (a.accessInfoIP > b.accessInfoIP) {
+            return 1;
+          }
+          return 0;
+        }
+
+        sortedByIP = superdata.sort(compare);
+        lastIp = "0";
+        repeatCount = [];
+        repeatRegion = [];
+        uniqueIP = [];
+        repeatCountry = [];
+        count = -1;
+        $.each(sortedByIP, function(index) {
+            // if (index === 0) {
+                // repeatCount[0]
+            // }
+            // else {
+                if (this.accessInfoIP.toLowerCase() != lastIp.toLowerCase()) {
+                    repeatRegion.push(this.accessRegion);
+                    repeatCountry.push(this.accessCountry);
+                    uniqueIP.push(this.accessInfoIP);
+                    repeatCount.push(1);
+                    lastIp = this.accessInfoIP;
+                    count++;
+                        console.log(lastIp);
+                        console.log(this.accessInfoIP);
+                }
+                else {
+                    repeatCount[count]++;
+                }
+            // }
+            
+        });
+
+        //console.log(uniqueRegion + repeatCountry + uniqueIP + repeatCount);
+        
         function onlyUnique(value, index, self) {
             return self.indexOf(value) === index;
         }
+        
         uniqueR = regions.filter(onlyUnique);
+        uniqueRegion = repeatRegion.filter(onlyUnique);
         
         // Count the occurance of each unique region
         Array.prototype.count = function(value) {
@@ -267,16 +321,28 @@ function populateAccessTable() {
             }
             return counter;
         };
-        regionCounts = [uniqueR.length];
+        regionCounts = [0];
         $.each(uniqueR, function( index ) {
             regionCounts[index] = regions.count(uniqueR[index]);
         });
         
+        regionByIpCounts = [0];
+        $.each(repeatCount, function( index ) {
+            regionByIpCounts[index] = repeatRegion.count(uniqueRegion[index]);
+        });
+        
         // Fill table with unique regions and counts
-        for (var i = 0; i < uniqueR.length; i++) {
+        for (var i = 0; i < uniqueRegion.length; i++) {
             geoTableContent += '<tr>';
-            geoTableContent += '<td><font size="3">' + geos[i] + '</font></td><td><font size="3">' + uniqueR[i] + '</font></td>';
-            geoTableContent += '<td><font size="3">' + regionCounts[i].toString() + '</font></td>';   
+            geoTableContent += '<td><font size="3">' + repeatCountry[i] + '</font></td><td><font size="3">' + uniqueRegion[i] + '</font></td>';
+            geoTableContent += '<td><font size="3">' + regionByIpCounts[i].toString() + '</font></td>';   
+        };
+
+        // Fill table with unique regions and counts
+        for (var i = 0; i < uniqueIP.length; i++) {
+            repeatTableContents += '<tr>';
+            repeatTableContents += '<td><font size="3">' + uniqueIP[i] + '</font></td><td><font size="3">' + repeatRegion[i] + '</font></td>';
+            repeatTableContents += '<td><font size="3">' + repeatCount[i].toString() + '</font></td>';   
         };
         
         
@@ -285,6 +351,8 @@ function populateAccessTable() {
         
         $('#geographyList table tbody').html(geoTableContent);
         
+        $('#connectionCounts table tbody').html(repeatTableContents);
+        
         //Determine color cycle of pie chart
         colors = ["#949FB1", "#46BFBD", "#FDB45C","#F7464A","#949FB1"];
         highlights = ["#A8B3C5", "#5AD3D1", "#FFC870","#FF5A5E","#A8B3C5"];
@@ -292,10 +360,10 @@ function populateAccessTable() {
         // Create Pie Chart of first result
         var data1 = [
             {
-                value: regionCounts[0],
+                value: regionByIpCounts[0],
                 color: "#949FB1",
                 highlight: "#A8B3C5",
-                label: uniqueR[0]
+                label: uniqueRegion[0]
             }
         ];
         
@@ -306,17 +374,16 @@ function populateAccessTable() {
          var locationChart = new Chart(ctx).Pie(data1);
     
         // Pie chart is expandable for when new regions connect
-        $.each(regionCounts, function (index) {
+        $.each(regionByIpCounts, function (index) {
             if (index > 0) {
                 locationChart.addData({
                     value: this,
-                    label: uniqueR[index],
+                    label: uniqueRegion[index],
                     color: colors[index],
                     highlight: highlights[index]
                 });
             }
         });
-        
     });
 };
 

@@ -61,7 +61,7 @@ block content
                                    | Page Views
                         tbody
                         
-         h2 Geographic connection counts
+         h2 Geographic unique connection counts
          #accessList
            #geographyList
             table
@@ -71,10 +71,21 @@ block content
                     th Count
                 tbody
   
+         h2 DoS Attempt Tracker
+         #accessList
+           #connectionCounts
+              table
+                thead
+                    th IP
+                    th Region
+                    th Count
+                tbody
+               
+               
          h2 Pie Chart of Access Regions:
          canvas(id="myChart" width="400" height="400")
 
-
+       
          h2 Last 25 Access Log Entries
          #accessList
             table
@@ -88,7 +99,6 @@ block content
                     th Delete
                 tbody
 
-       
     //.
       h3
         | But here･s a wall of text so we can test the stalker navbar
