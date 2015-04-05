@@ -6,7 +6,7 @@ var basicAuth = require('basic-auth-connect');
 
 var auth = basicAuth(function(user, pass, callback) {
  var result = (user === 'admin' && pass === 'password');
- callback(null /* error */, result);
+    callback(null /* error */, result);
 });
 
 
