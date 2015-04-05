@@ -229,11 +229,10 @@ function populateAccessTable() {
        $.each(data, function( index ) {
            if (index < 25) {
                tableContent += '<tr>';
-               tableContent += '<td><font size="4">' + (index+1) + '</font></td>';
                tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
                tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
                if (this.hasOwnProperty('accessRegion')) {
-                   tableContent += '<td><font size="3">' + this.accessCountry + '</font></td><td><font size="3">' + this.accessRegion + '</font></td>';
+                   tableContent += '<td><font size="3">' + this.accessCountry + '/' + this.accessRegion + '</font></td>';
                }
                else {
                     tableContent += '<td><font size="3">??</font></td><td><font size="3">??</font></td>';
@@ -294,8 +293,6 @@ function populateAccessTable() {
                     repeatCount.push(1);
                     lastIp = this.accessInfoIP;
                     count++;
-                        console.log(lastIp);
-                        console.log(this.accessInfoIP);
                 }
                 else {
                     repeatCount[count]++;
@@ -384,6 +381,8 @@ function populateAccessTable() {
                 });
             }
         });
+        
+        $('#chartLegend').html(locationChart.generateLegend());
     });
 };
 
