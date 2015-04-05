@@ -287,7 +287,12 @@ function populateAccessTable() {
             // }
             // else {
                 if (this.accessInfoIP.toLowerCase() != lastIp.toLowerCase()) {
-                    repeatRegion.push(this.accessRegion);
+                    if (this.accessRegion === "") {
+                        repeatRegion.push("??");
+                    }
+                    else {
+                        repeatRegion.push(this.accessRegion);
+                    }
                     repeatCountry.push(this.accessCountry);
                     uniqueIP.push(this.accessInfoIP);
                     repeatCount.push(1);
@@ -350,25 +355,95 @@ function populateAccessTable() {
         
         $('#connectionCounts table tbody').html(repeatTableContents);
         
+        function _interpolation(a, b, factor) {
+			var ret = [];
+
+			for(var i = 0; i < Math.min(a.length, b.length); i++) {
+				ret.push(a[i] * (1 - factor) + b[i] * factor);
+			}
+
+			return ret;
+		}
+        
+        function colorInterp(start, end, n) {
+			var ret = [];
+
+			//var a = new Color(start);
+			//var b = new Color(end);
+
+			for(var i = 0; i < n; i++) {
+				//var color = new Color();
+				var rgb = _interpolation(start, end, i / (n - 1));
+				//color.setRGB(rgb[0], rgb[1], rgb[2]);
+				ret.push(rgb);
+			}
+
+			return ret;
+		};
+        
+        function decimalToHexString(number)
+        {
+            if (number < 0)
+            {
+                number = 0xFFFFFFFF + number + 1;
+            }
+            if (number < 10) {
+                return "0" + Math.ceil(number).toString(16).toUpperCase();
+            }
+            else {
+                return Math.ceil(number).toString(16).toUpperCase();
+            }
+        }
+        function rgbToHex(r) {
+            return "#" + decimalToHexString(r[0]) + decimalToHexString(r[1]) + decimalToHexString(r[2]);
+        }
+
+        col1 = [220, 0, 0]; // some red
+        col2 = [0, 220, 0]; // some green
+        
+        colorsRGB = colorInterp(col1, col2, uniqueRegion.length);
+       
+        colors = [];
+        $.each (colorsRGB, function() {
+            colors.push(rgbToHex(this));
+        });
+        
+        col1 = [255, 50, 50]; // some red
+        col2 = [50, 255, 50]; // some green
+
+        highlightsRGB = colorInterp(col1, col2, uniqueRegion.length);
+
+        highlights = [];
+        $.each (highlightsRGB, function() {
+            highlights.push(rgbToHex(this));
+        });
+        
         //Determine color cycle of pie chart
-        colors = ["#949FB1", "#46BFBD", "#FDB45C","#F7464A","#949FB1"];
-        highlights = ["#A8B3C5", "#5AD3D1", "#FFC870","#FF5A5E","#A8B3C5"];
+        //colors = ["#949FB1", "#46BFBD", "#FDB45C","#F7464A","#949FB1"];
+        //highlights = ["#A8B3C5", "#5AD3D1", "#FFC870","#FF5A5E","#A8B3C5"];
      
         // Create Pie Chart of first result
         var data1 = [
             {
                 value: regionByIpCounts[0],
-                color: "#949FB1",
-                highlight: "#A8B3C5",
+                color: colors[0],
+                highlight: highlights[0],
                 label: uniqueRegion[0]
             }
         ];
-        
+      
         // Get context with jQuery - using jQuery's .get() method.
          var ctx = $("#myChart").get(0).getContext("2d");
-        
+       
+         var options = {
+            //legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span     style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+            // TWO EXTRA ENTRIES? <h3>Legend</h3>
+            legendTemplate : "<p><% for (var i=0; i<(segments.length-2); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
+
+         }
+         
         // This will get the first returned node in the jQuery collection.
-         var locationChart = new Chart(ctx).Pie(data1);
+         var locationChart = new Chart(ctx).Doughnut(data1,options);
     
         // Pie chart is expandable for when new regions connect
         $.each(regionByIpCounts, function (index) {
@@ -383,6 +458,7 @@ function populateAccessTable() {
         });
         
         $('#chartLegend').html(locationChart.generateLegend());
+        console.log(locationChart.generateLegend());
     });
 };
 
