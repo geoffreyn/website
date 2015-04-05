@@ -120,6 +120,21 @@ block content
     var socket = io.connect();
     var pages = {};
     var lastPageId = 0;
+    var msgArray = [];
+    var msgCount = -1;
+    
+    function GetClock(msgArray){
+        $.each (msgArray, function( index ) {
+            seconds = (new Date().getTime() - new Date(this.timestamp).getTime())/1000;
+            minutes = Math.floor(seconds/60);
+            seconds = Math.floor(seconds%60);
+                    
+            document.getElementById('timepassed' + index).innerHTML=" " + minutes + " m, " + seconds + " s";
+        });
+    }
+   
+    setInterval(GetClock,1000,msgArray);
+    
     socket.on('connect', function () {
         //console.log('Socket connected');
         socket.on('pageview', function (msg) {
@@ -131,10 +146,10 @@ block content
                 //}
                 seconds = (new Date().getTime() - new Date(msg.timestamp).getTime())/1000;
                 minutes = Math.floor(seconds/60);
-                seconds = seconds%60;
+                seconds = Math.floor(seconds%60);
+                msgCount++;
                 
-                
-                $('#visits tbody').prepend('<tr><td>' + msg.url + '</td><td>' + msg.ip + '</td><td>' + minutes + ' m ' + seconds + ' s ' + '</td></tr>');
+                $('#visits tbody').prepend('<tr><td>' + msg.url + '</td><td>' + msg.ip + '</td><td id="timepassed' + msgCount + '">' + minutes + ' m ' + seconds + ' s ' + '</td></tr>');
                 if (pages[msg.url]) {
                     pages[msg.url].views = pages[msg.url].views + 1;
                     $('#page' + pages[msg.url].pageId).html(pages[msg.url].views);
@@ -142,6 +157,7 @@ block content
                     pages[msg.url] = {views: 1, pageId: ++lastPageId};
                     $('#pageViews tbody').append('<tr><td>' + msg.url + '</td><td id="page' + lastPageId + '">1</td></tr>');
                 }
+                msgArray.push(msg);
             }
         });
     });
