@@ -252,7 +252,12 @@ function populateAccessTable() {
         $.each(data, function(index) {
             if (this.hasOwnProperty('accessRegion')) { 
                     count++;
-                    regions.push(this.accessRegion);
+                    if (this.accessRegion === "") {
+                        regions.push("??")
+                    }
+                    else {
+                        regions.push(this.accessRegion);
+                    }
                     geos.push(this.accessCountry);
                     locers.push(index);
                     superdata[count] = ({
@@ -309,10 +314,13 @@ function populateAccessTable() {
         //console.log(uniqueRegion + repeatCountry + uniqueIP + repeatCount);
         
         function onlyUnique(value, index, self) {
-            return self.indexOf(value) === index;
+            if (self.indexOf(value) === index) {
+                countryByIpCounts.push(repeatCountry[index]);
+            }
+            return (self.indexOf(value) === index);
         }
         
-        uniqueR = regions.filter(onlyUnique);
+        countryByIpCounts = [];
         uniqueRegion = repeatRegion.filter(onlyUnique);
         
         // Count the occurance of each unique region
@@ -324,8 +332,8 @@ function populateAccessTable() {
             return counter;
         };
         regionCounts = [0];
-        $.each(uniqueR, function( index ) {
-            regionCounts[index] = regions.count(uniqueR[index]);
+        $.each(repeatRegion, function( index ) {
+            regionCounts[index] = regions.count(repeatRegion[index]);
         });
         
         regionByIpCounts = [0];
@@ -333,19 +341,43 @@ function populateAccessTable() {
             regionByIpCounts[index] = repeatRegion.count(uniqueRegion[index]);
         });
         
+        sortedRegion = [];
+        sortedCountry = [];
+        sortedIP = [];
+        // Sort ips and regions by access atempts
+        sortedIPcounts = repeatCount.slice(0).sort(function(a, b){return b-a});
+        $.each(sortedIPcounts, function(index) {
+            for (var i = 0; i < sortedIPcounts.length; i++) {
+                if (this.valueOf() === repeatCount[i]) {
+                    sortedRegion.push(repeatRegion[i]);
+                    sortedCountry.push(repeatCountry[i]);
+                    sortedIP.push(uniqueIP[i]);
+                }
+            }
+        });
+        
+        // Fill table with unique regions and counts -  DoS Attempt Tracker
+        for (var i = 0; i < sortedIP.length; i++) {
+            repeatTableContents += '<tr>';
+            repeatTableContents += '<td><font size="3">' + sortedIP[i] + '</font></td><td><font size="3">' + sortedCountry[i] + "/" + sortedRegion[i] + '</font></td>';
+            repeatTableContents += '<td><font size="3">' + sortedIPcounts[i].toString() + '</font></td>';   
+        };
+        
+        
+        
         // Fill table with unique regions and counts
         for (var i = 0; i < uniqueRegion.length; i++) {
             geoTableContent += '<tr>';
-            geoTableContent += '<td><font size="3">' + repeatCountry[i] + '</font></td><td><font size="3">' + uniqueRegion[i] + '</font></td>';
+            geoTableContent += '<td><font size="3">' + countryByIpCounts[i] + '</font></td><td><font size="3">' + uniqueRegion[i] + '</font></td>';
             geoTableContent += '<td><font size="3">' + regionByIpCounts[i].toString() + '</font></td>';   
         };
 
-        // Fill table with unique regions and counts
-        for (var i = 0; i < uniqueIP.length; i++) {
-            repeatTableContents += '<tr>';
-            repeatTableContents += '<td><font size="3">' + uniqueIP[i] + '</font></td><td><font size="3">' + repeatRegion[i] + '</font></td>';
-            repeatTableContents += '<td><font size="3">' + repeatCount[i].toString() + '</font></td>';   
-        };
+        // Fill table with unique regions and counts -  DoS Attempt Tracker
+        // for (var i = 0; i < uniqueIP.length; i++) {
+            // repeatTableContents += '<tr>';
+            // repeatTableContents += '<td><font size="3">' + uniqueIP[i] + '</font></td><td><font size="3">' + repeatCountry[i] + "/" + repeatRegion[i] + '</font></td>';
+            // repeatTableContents += '<td><font size="3">' + repeatCount[i].toString() + '</font></td>';   
+        // };
         
         
         // Inject the whole content string into our existing HTML tables
@@ -458,7 +490,6 @@ function populateAccessTable() {
         });
         
         $('#chartLegend').html(locationChart.generateLegend());
-        console.log(locationChart.generateLegend());
     });
 };
 
