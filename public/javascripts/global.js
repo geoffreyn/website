@@ -223,6 +223,7 @@ function populateAccessTable() {
         var repeatRegion = [];
         var uniqueIP = [];
         var repeatCountry = [];
+        var makeNewChart;
         count = -1;
         $.each(sortedByIP, function(index) {
             // if (index === 0) {
@@ -279,11 +280,13 @@ function populateAccessTable() {
             regionByIpCounts.push(repeatRegion.count(uniqueRegion[index]));
         });
         
+        // Sort ips and regions by access attempts
         var sortedRegion = [];
         var sortedCountry = [];
         var sortedIP = [];
-        // Sort ips and regions by access atempts
         var sortedIPcounts = repeatCount.slice(0).sort(function(a, b){return b-a;});
+        var k = 0;
+        
         $.each(sortedIPcounts, function(index) {
             for (i = 0; i < sortedIPcounts.length; i++) {
                 if (this.valueOf() === repeatCount[i]) {
@@ -295,7 +298,7 @@ function populateAccessTable() {
         });
         
         // Fill table with unique regions and counts -  DoS Attempt Tracker
-        for (i = 0; i < sortedIP.length; i++) {
+        for (i = 0; i < sortedIPcounts.length; i++) {
             repeatTableContents += '<tr>';
             repeatTableContents += '<td><font size="3">' + sortedIP[i] + '</font></td><td><font size="3">' + sortedCountry[i] + "/" + sortedRegion[i] + '</font></td>';
             repeatTableContents += '<td><font size="3">' + sortedIPcounts[i].toString() + '</font></td>';   
@@ -393,38 +396,58 @@ function populateAccessTable() {
             highlights = [rgbToHex(col1), rgbToHex(col2)];
         }
         
-        // Create Pie Chart of first result
-        var data1 = [
-            {
-                value: regionByIpCounts[0],
-                color: colors[0],
-                highlight: highlights[0],
-                label: uniqueRegion[0]
+        if (typeof locationChart === "undefined") {
+            makeNewChart = true;
+        }
+        else {
+            if (locationChart.segments.length !== regionByIpCounts.length) {
+                locationChart.destroy();
+                makeNewChart = true;
             }
-        ];
-      
-        // Get context with jQuery - using jQuery's .get() method.
-        var ctx = $("#myChart").get(0).getContext("2d");
-       
-        var options = {
-            // TWO EXTRA ENTRIES? <h3>Legend</h3>
-            legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
-        };
+            else {
+                makeNewChart = false;
+            }
+        }
+        if (makeNewChart) {
+           // Create Pie Chart of first result
+            var data1 = [
+                {
+                    value: regionByIpCounts[0],
+                    color: colors[0],
+                    highlight: highlights[0],
+                    label: uniqueRegion[0]
+                }
+            ];
+          
+            // Get context with jQuery - using jQuery's .get() method.
+            var ctx = $("#myChart").get(0).getContext("2d");
+           
+            var options = {
+                // TWO EXTRA ENTRIES? <h3>Legend</h3>
+                legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
+            };
          
-        // This will get the first returned node in the jQuery collection.
-        var locationChart = new Chart(ctx).Pie(data1,options);
+            // This will get the first returned node in the jQuery collection.
+            var locationChart = new Chart(ctx).Pie(data1,options);
+         
     
-        // Pie chart is expandable for when new regions connect
-        $.each(regionByIpCounts, function (index) {
-            if (index > 0) {
-                locationChart.addData({
-                    value: this,
-                    label: uniqueRegion[index],
-                    color: colors[index],
-                    highlight: highlights[index]
-                });
-            }
-        });
+            // Pie chart is expandable for when new regions connect
+            $.each(regionByIpCounts, function (index) {
+                if (index > 0) {
+                    locationChart.addData({
+                        value: this,
+                        label: uniqueRegion[index],
+                        color: colors[index],
+                        highlight: highlights[index]
+                    });
+                }
+            });
+        }
+        else {
+            $.each(regionByIpCounts, function (index) {
+                locationChart.segments[index].value = regionByIpCounts[index];
+            });
+        }
         
         $('#chartLegend').html(locationChart.generateLegend());
     });
