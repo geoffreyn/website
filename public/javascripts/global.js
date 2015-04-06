@@ -284,6 +284,17 @@ function populateAccessTable() {
         var sortedRegion = [];
         var sortedCountry = [];
         var sortedIP = [];
+        var repeatList = [];
+        
+        for (i = 0; i < repeatCount.length; i++) {
+            for (j = i+1; j < repeatCount.length; j++) {
+                if (repeatCount[j] === repeatCount[i]) {
+                    repeatCount[j] = repeatCount[j] + 100000;
+                    repeatList.push(j);
+                }
+            }
+        }
+                
         var sortedIPcounts = repeatCount.slice(0).sort(function(a, b){return b-a;});
         var k = 0;
         
@@ -296,6 +307,12 @@ function populateAccessTable() {
                 }
             }
         });
+        
+        $.each(repeatList, function (index) {
+           repeatCount[this.value] = repeatCount[this.value] - 100000;
+           sortedIPcounts[index] = sortedIPcounts[index] - 100000;
+        });
+        
         
         // Fill table with unique regions and counts -  DoS Attempt Tracker
         for (i = 0; i < sortedIPcounts.length; i++) {
