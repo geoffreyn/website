@@ -231,8 +231,9 @@ function populateAccessTable() {
             // }
             // else {
                 if (this.accessInfoIP.toLowerCase() !== lastIp.toLowerCase()) {
+                    // If they don't have a region just call it the country they're in
                     if (this.accessRegion === '') {
-                        repeatRegion.push('??');
+                        repeatRegion.push(this.accessCountry);
                     }
                     else {
                         repeatRegion.push(this.accessRegion);

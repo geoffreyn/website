@@ -164,7 +164,7 @@ block content
                     $('#visits tbody').prepend('<tr><td>' + msg.url + '</td><td>' + msg.ip + '</td><td id="timepassed' + msgCount + '"> NOW! </td></tr>');
                 }
                 else {
-                    $('#visits tbody').prepend('<tr><td>' + msg.url + '</td><td>' + msg.ip + '</td><td id="timepassed' + msgCount + '">' + minutes + ' m ' + seconds + ' s ' + '</td></tr>');
+                    $('#visits tbody').prepend('<tr><td>' + msg.url + '</td><td>' + msg.ip + '</td><td id="timepassed' + msgCount + '">' + minutes + ' m, ' + seconds + ' s ' + '</td></tr>');
                 }
                 if (pages[msg.url]) {
                     pages[msg.url].views = pages[msg.url].views + 1;
