@@ -122,6 +122,8 @@ block content
     var lastPageId = 0;
     var msgArray = [];
     var msgCount = -1;
+    var seconds = 0;
+    var minutes = 0;
     
     function GetClock(msgArray){
         $.each (msgArray, function( index ) {
@@ -152,7 +154,9 @@ block content
                 //}
                 // Not sure why seconds are off by 8
                 seconds = (new Date().getTime() - new Date(msg.timestamp).getTime())/1000;
-                if (seconds > 8) { seconds = seconds - 8};
+                if (seconds > 8) { 
+                    seconds = seconds - 8
+                }
                 minutes = Math.floor(seconds/60);
                 seconds = Math.floor(seconds%60);
                 msgCount++;

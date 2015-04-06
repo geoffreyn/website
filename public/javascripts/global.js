@@ -1,33 +1,9 @@
+"use strict";
+
 // Userlist data array for filling in info box
 var userListData = [];
 var accessListData = [];
 var socket = io.connect();
-
-// DOM ready ============================================
-$(document).ready(function() {
-    
-    // Populate the user table on intial page load
-    populateTable();
-    
-    // Username link click
-    $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
-
-    // Add User button click
-    $('#btnAddUser').on('click', addUser);
-
-    // Delete User link click
-    $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
-    
-    // Delete Access log entry link click
-    $('#accessList table tbody').on('click', 'td a.linkdeleteAccess', deleteAccess);
-  
-    console.log('Global socket connected');
-    socket.on('pageview', function (msg) {
-        if (msg.url) {
-            appendTable(msg);
-        }
-    });
-});
 
 // Functions ============================================
 
@@ -53,7 +29,7 @@ function populateTable() {
         // Inject the whole content string into our existing HTML table
         $('#userList table tbody').html(tableContent);
     });
-};
+}
 
 // Show User Info
 function showUserInfo(event) {
@@ -76,7 +52,7 @@ function showUserInfo(event) {
     $('#userInfoGender').text(thisUserObject.gender);
     $('#userInfoLocation').text(thisUserObject.location);
 
-};
+}
 
 // Add User
 function addUser(event) {
@@ -99,7 +75,7 @@ function addUser(event) {
             'age': $('#addUser fieldset input#inputUserAge').val(),
             'location': $('#addUser fieldset input#inputUserLocation').val(),
             'gender': $('#addUser fieldset input#inputUserGender').val()
-        }
+        };
 
         // Use AJAX to post the object to our adduser service
         $.ajax({
@@ -132,7 +108,7 @@ function addUser(event) {
         alert('Please fill in all fields');
         return false;
     }
-};
+}
 
 // Delete User
 function deleteUser(event) {
@@ -152,9 +128,7 @@ function deleteUser(event) {
         }).done(function( response ) {
 
             // Check for a successful (blank) response
-            if (response.msg === '') {
-            }
-            else {
+            if (response.msg !== '') {
                 alert('I can haz cheezeburger, but you no delete user!: ' + response.msg);
             }
 
@@ -171,46 +145,7 @@ function deleteUser(event) {
 
     }
 
-};
-
-// Delete Access
-function deleteAccess(event) {
-
-    event.preventDefault();
-
-    // Pop up a confirmation dialog
-    var confirmation = confirm('Are you sure you want to delete this access log entry?');
-
-    // Check and make sure the user confirmed
-    if (confirmation === true) {
-
-        // If they did, do our delete
-        $.ajax({
-            type: 'DELETE',
-            url: '/analytics/deleteAccess/' + $(this).attr('rel')
-        }).done(function( response ) {
-
-            // Check for a successful (blank) response
-            if (response.msg === '') {
-            }
-            else {
-                alert('I can haz cheezeburger, but you no delete access log entry!: ' + response.msg);
-            }
-
-        });
-
-        // Update the displayed log
-        populateAccessTable();
-        
-    }
-    else {
-
-        // If they said no to the confirm, do nothing
-        return false;
-
-    }
-
-};
+}
 
 // Fill table with data
 function populateAccessTable() {
@@ -220,6 +155,9 @@ function populateAccessTable() {
     var repeatTableContents = '';    
     var geoTableContent = '';
     
+    // For loop variable
+    var i,j = 0;
+    var count = -1;
     
     // jQuery AJAX call for JSON
     $.getJSON( '/analytics/accessList', { user: 'admin', pass: 'password' } , function( data ) {
@@ -244,16 +182,16 @@ function populateAccessTable() {
         });
         
         // Fill variable regions with name of all regions from access logs
-        regions = [];
-        geos = [];
-        locers = [];
-        superdata = [];
+        var regions = [];
+        var geos = [];
+        var locers = [];
+        var superdata = [];
         count = -1;
         $.each(data, function(index) {
             if (this.hasOwnProperty('accessRegion')) { 
                     count++;
-                    if (this.accessRegion === "") {
-                        regions.push("??")
+                    if (this.accessRegion === '') {
+                        regions.push('??');
                     }
                     else {
                         regions.push(this.accessRegion);
@@ -279,21 +217,21 @@ function populateAccessTable() {
           return 0;
         }
 
-        sortedByIP = superdata.sort(compare);
-        lastIp = "0";
-        repeatCount = [];
-        repeatRegion = [];
-        uniqueIP = [];
-        repeatCountry = [];
+        var sortedByIP = superdata.sort(compare);
+        var lastIp = '0';
+        var repeatCount = [];
+        var repeatRegion = [];
+        var uniqueIP = [];
+        var repeatCountry = [];
         count = -1;
         $.each(sortedByIP, function(index) {
             // if (index === 0) {
                 // repeatCount[0]
             // }
             // else {
-                if (this.accessInfoIP.toLowerCase() != lastIp.toLowerCase()) {
-                    if (this.accessRegion === "") {
-                        repeatRegion.push("??");
+                if (this.accessInfoIP.toLowerCase() !== lastIp.toLowerCase()) {
+                    if (this.accessRegion === '') {
+                        repeatRegion.push('??');
                     }
                     else {
                         repeatRegion.push(this.accessRegion);
@@ -320,34 +258,34 @@ function populateAccessTable() {
             return (self.indexOf(value) === index);
         }
         
-        countryByIpCounts = [];
-        uniqueRegion = repeatRegion.filter(onlyUnique);
+        var countryByIpCounts = [];
+        var uniqueRegion = repeatRegion.filter(onlyUnique);
         
         // Count the occurance of each unique region
         Array.prototype.count = function(value) {
-            var counter = 0;
-            for(var i=0;i<this.length;i++) {
-                if (this[i] === value) counter++;
+            count = 0;
+            for (i=0;i<this.length;i++) {
+                if (this[i] === value) count++;
             }
-            return counter;
+            return count;
         };
-        regionCounts = [0];
-        $.each(repeatRegion, function( index ) {
-            regionCounts[index] = regions.count(repeatRegion[index]);
+        var regionCounts = [];
+        $.each(repeatRegion, function() {
+            regionCounts.push(regions.count(this.valueOf()));
         });
         
-        regionByIpCounts = [0];
+        var regionByIpCounts = [];
         $.each(repeatCount, function( index ) {
-            regionByIpCounts[index] = repeatRegion.count(uniqueRegion[index]);
+            regionByIpCounts.push(repeatRegion.count(uniqueRegion[index]));
         });
         
-        sortedRegion = [];
-        sortedCountry = [];
-        sortedIP = [];
+        var sortedRegion = [];
+        var sortedCountry = [];
+        var sortedIP = [];
         // Sort ips and regions by access atempts
-        sortedIPcounts = repeatCount.slice(0).sort(function(a, b){return b-a});
+        var sortedIPcounts = repeatCount.slice(0).sort(function(a, b){return b-a;});
         $.each(sortedIPcounts, function(index) {
-            for (var i = 0; i < sortedIPcounts.length; i++) {
+            for (i = 0; i < sortedIPcounts.length; i++) {
                 if (this.valueOf() === repeatCount[i]) {
                     sortedRegion.push(repeatRegion[i]);
                     sortedCountry.push(repeatCountry[i]);
@@ -357,23 +295,23 @@ function populateAccessTable() {
         });
         
         // Fill table with unique regions and counts -  DoS Attempt Tracker
-        for (var i = 0; i < sortedIP.length; i++) {
+        for (i = 0; i < sortedIP.length; i++) {
             repeatTableContents += '<tr>';
             repeatTableContents += '<td><font size="3">' + sortedIP[i] + '</font></td><td><font size="3">' + sortedCountry[i] + "/" + sortedRegion[i] + '</font></td>';
             repeatTableContents += '<td><font size="3">' + sortedIPcounts[i].toString() + '</font></td>';   
-        };
+        }
         
         
         
         // Fill table with unique regions and counts
-        for (var i = 0; i < uniqueRegion.length; i++) {
+        for (i = 0; i < uniqueRegion.length; i++) {
             geoTableContent += '<tr>';
             geoTableContent += '<td><font size="3">' + countryByIpCounts[i] + '</font></td><td><font size="3">' + uniqueRegion[i] + '</font></td>';
             geoTableContent += '<td><font size="3">' + regionByIpCounts[i].toString() + '</font></td>';   
-        };
+        }
 
         // Fill table with unique regions and counts -  DoS Attempt Tracker
-        // for (var i = 0; i < uniqueIP.length; i++) {
+        // for (i = 0; i < uniqueIP.length; i++) {
             // repeatTableContents += '<tr>';
             // repeatTableContents += '<td><font size="3">' + uniqueIP[i] + '</font></td><td><font size="3">' + repeatCountry[i] + "/" + repeatRegion[i] + '</font></td>';
             // repeatTableContents += '<td><font size="3">' + repeatCount[i].toString() + '</font></td>';   
@@ -387,31 +325,25 @@ function populateAccessTable() {
         
         $('#connectionCounts table tbody').html(repeatTableContents);
         
+        //Helper functions for generating gradient
         function _interpolation(a, b, factor) {
 			var ret = [];
-
-			for(var i = 0; i < Math.min(a.length, b.length); i++) {
+			for (i = 0; i < Math.min(a.length, b.length); i++) {
 				ret.push(a[i] * (1 - factor) + b[i] * factor);
 			}
-
 			return ret;
 		}
         
         function colorInterp(start, end, n) {
-			var ret = [];
-
-			//var a = new Color(start);
-			//var b = new Color(end);
-
-			for(var i = 0; i < n; i++) {
+            var ret = [];
+			for (j = 0; j < n; j++) {
 				//var color = new Color();
-				var rgb = _interpolation(start, end, i / (n - 1));
+				var rgb = _interpolation(start, end, j / (n - 1));
 				//color.setRGB(rgb[0], rgb[1], rgb[2]);
 				ret.push(rgb);
 			}
-
 			return ret;
-		};
+		}
         
         function decimalToHexString(number)
         {
@@ -426,34 +358,41 @@ function populateAccessTable() {
                 return Math.ceil(number).toString(16).toUpperCase();
             }
         }
+        
         function rgbToHex(r) {
             return "#" + decimalToHexString(r[0]) + decimalToHexString(r[1]) + decimalToHexString(r[2]);
         }
 
-        col1 = [220, 0, 0]; // some red
-        col2 = [0, 220, 0]; // some green
+        //Determine color cycle of pie chart
+        var colors = [];
+        var col1 = [220, 0, 0]; // some red
+        var col2 = [0, 220, 0]; // some green
         
-        colorsRGB = colorInterp(col1, col2, uniqueRegion.length);
-       
-        colors = [];
-        $.each (colorsRGB, function() {
-            colors.push(rgbToHex(this));
-        });
+        // One color doesn't interpolate correct so just skip for less than 3 colors
+        if (uniqueRegion.length > 2) {
+            var colorsRGB = colorInterp(col1, col2, uniqueRegion.length);
+            $.each (colorsRGB, function() {
+                colors.push(rgbToHex(this));
+            });
+        }
+        else {
+            colors = [rgbToHex(col1), rgbToHex(col2)];
+        }
         
+        var highlights = [];
         col1 = [255, 50, 50]; // some red
         col2 = [50, 255, 50]; // some green
 
-        highlightsRGB = colorInterp(col1, col2, uniqueRegion.length);
-
-        highlights = [];
-        $.each (highlightsRGB, function() {
-            highlights.push(rgbToHex(this));
-        });
+        if (uniqueRegion.length > 2) {
+            var highlightsRGB = colorInterp(col1, col2, uniqueRegion.length);
+            $.each (highlightsRGB, function() {
+                highlights.push(rgbToHex(this));
+            });
+        }
+        else {
+            highlights = [rgbToHex(col1), rgbToHex(col2)];
+        }
         
-        //Determine color cycle of pie chart
-        //colors = ["#949FB1", "#46BFBD", "#FDB45C","#F7464A","#949FB1"];
-        //highlights = ["#A8B3C5", "#5AD3D1", "#FFC870","#FF5A5E","#A8B3C5"];
-     
         // Create Pie Chart of first result
         var data1 = [
             {
@@ -465,17 +404,15 @@ function populateAccessTable() {
         ];
       
         // Get context with jQuery - using jQuery's .get() method.
-         var ctx = $("#myChart").get(0).getContext("2d");
+        var ctx = $("#myChart").get(0).getContext("2d");
        
-         var options = {
-            //legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span     style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+        var options = {
             // TWO EXTRA ENTRIES? <h3>Legend</h3>
-            legendTemplate : "<p><% for (var i=0; i<(segments.length-2); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
-
-         }
+            legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
+        };
          
         // This will get the first returned node in the jQuery collection.
-         var locationChart = new Chart(ctx).Doughnut(data1,options);
+        var locationChart = new Chart(ctx).Pie(data1,options);
     
         // Pie chart is expandable for when new regions connect
         $.each(regionByIpCounts, function (index) {
@@ -491,20 +428,48 @@ function populateAccessTable() {
         
         $('#chartLegend').html(locationChart.generateLegend());
     });
-};
+}
 
+// Delete Access
+function deleteAccess(event) {
+    
+    event.preventDefault();
+    
+    // Pop up a confirmation dialog
+    var confirmation = confirm('Are you sure you want to delete this access log entry?');
+
+    // Check and make sure the user confirmed
+    if (confirmation === true) {
+
+        // If they did, do our delete
+        $.ajax({
+            type: 'DELETE',
+            url: '/analytics/deleteAccess/' + $(this).attr('rel')
+        }).done(function( response ) {
+            // Check for a successful (blank) response
+            if (response.msg !== '') {
+                alert('I can haz cheezeburger, but you no delete access log entry!: ' + response.msg);
+            }
+        });
+
+        // Update the displayed log
+        populateAccessTable();
+    }
+    else {
+        // If they said no to the confirm, do nothing
+        return false;
+    }
+}
+
+//Add Access log
 function appendTable(msg) {
-    //console.log('Socket-DB appended');
-     
-    //var locMsg = jQuery.parseJSON(JSON.stringify(msg.location));
-     
     var newAccess = {
             'accessInfoAddress': msg.url,
             'accessInfoIP': msg.ip,
             'accessInfoTime': msg.timestamp,
             'accessCountry': msg.location.country,
             'accessRegion': msg.location.region
-    }
+    };
     
     // Use AJAX to post the object to our adduser service
     $.ajax({
@@ -518,12 +483,37 @@ function appendTable(msg) {
         if (response.msg === '') {
             console.log(msg);
         }
-
         else {
-
             // If something goes wrong, alert the error message that our service returned
             //alert('Error: ' + response.msg);
             console.log('Error: ' + response.msg);
         }
     });
-};
+}
+
+
+// DOM ready ============================================
+$(document).ready(function() {
+    
+    // Populate the user table on intial page load
+    populateTable();
+    
+    // Username link click
+    $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+
+    // Add User button click
+    $('#btnAddUser').on('click', addUser);
+
+    // Delete User link click
+    $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+    
+    // Delete Access log entry link click
+    $('#accessList table tbody').on('click', 'td a.linkdeleteAccess', deleteAccess);
+  
+    console.log('Global socket connected');
+    socket.on('pageview', function (msg) {
+        if (msg.url) {
+            appendTable(msg);
+        }
+    });
+});

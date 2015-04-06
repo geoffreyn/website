@@ -1,3 +1,5 @@
+"use strict";
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -6,23 +8,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var nib = require('nib');
 var stylus = require('stylus');
-var connect = require('connect')
+var connect = require('connect');
 var vhost = require('vhost');
 var geoip = require('geoip-lite'); 
- 
-var basicAuth = require('basic-auth-connect');
-
-// Authenticator - Asynchronous
-
-var auth = basicAuth(function(user, pass, callback) {
- var result = (user === 'admin' && pass === 'password');
- callback(null /* error */, result);
-});
-
 
 // Database
 var mongo = require('mongoskin');
-var db = mongo.db("mongodb://localhost:27017/website", {native_parser:true});
+var db = mongo.db('mongodb://localhost:27017/website2', {native_parser:true});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -39,7 +31,7 @@ geoffapp.use(function(req, res, next) {
     {
         console.log('Redirecting from: ' + req.url);
         req.url = req.url + username;
-    };
+    }
     
     next();
 });
@@ -52,7 +44,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 app.set('port', process.env.PORT || 3000);
 server.listen(app.get('port'), function () {
-    console.log("Express server listening on port " + app.get('port'));
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 
@@ -60,7 +52,6 @@ server.listen(app.get('port'), function () {
 app.use(vhost('geoffrey.webhop.me', geoffapp));
 app.use(vhost('geoff.webhop.me', geoffapp));
 app.use(vhost('firetree.ddns.net', mainapp));
-
 
 function compile(str, path) {
   return stylus(str)
@@ -97,7 +88,7 @@ app.use('/users', users);
 app.use('/analytics', analytics);
 
 io.use(function(socket, next) {
-  var handshake = socket.request;
+  //var handshake = socket.request;
   // make sure the handshake data looks good as before
   // if error do this:
     // next(new Error('not authorized');
@@ -106,16 +97,16 @@ io.use(function(socket, next) {
 });
 
 io.sockets.on('connection', function (socket) {
-    ip = socket.handshake.address;
+    var ip = socket.handshake.address;
     
     socket.on('message', function (message) {
-        console.log("Got message from: " + ip);
-        url = message;
+        console.log('Got message from: ' + ip);
+        var url = message;
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'location': geoip.lookup(ip), 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
     });
 
     socket.on('disconnect', function () {
-        console.log("Socket disconnection from: " + ip + ' in: ' + geoip.lookup(ip).country + '/' + geoip.lookup(ip).region);
+        console.log('Socket disconnection from: ' + ip + ' in: ' + geoip.lookup(ip).country + '/' + geoip.lookup(ip).region);
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});
     });
 

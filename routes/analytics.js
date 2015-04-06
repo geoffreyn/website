@@ -3,11 +3,12 @@ var router = express.Router();
 
 var basicAuth = require('basic-auth-connect');
 
+// Authenticator - Asynchronous
+
 var auth = basicAuth(function(user, pass, callback) {
  var result = (user === 'admin' && pass === 'password');
  callback(null /* error */, result);
 });
-
 
 /*
  * GET access list.
