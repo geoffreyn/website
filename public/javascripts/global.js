@@ -213,16 +213,15 @@ function populateAccessTable() {
         });
     });
     
-    // NEED TO FIX table by getting each country/region pair!
-    // Fill table with unique regions and counts
-    for (i = 0; i < uniqueRegions.length; i++) {
-        geoTableContent += '<tr>';
-        geoTableContent += '<td><font size="3">' + uniqueCountry[i] + '</font></td><td><font size="3">' + uniqueRegions[i] + '</font></td>';
-        geoTableContent += '<td><font size="3">' + regionCounts[i].toString() + '</font></td>';   
+    // Fill table with unique regions and counts -  DoS Attempt Tracker
+    for (i = 0; i < regionCounts.length; i++) {
+        repeatTableContents += '<tr>';
+        repeatTableContents += '<td><font size="3">' + uniqueIP[i] + '</font></td><td><font size="3">' + uniqueCountry[i] + "/" + uniqueRegions[i] + '</font></td>';
+        repeatTableContents += '<td><font size="3">' + regionCounts[i].toString() + '</font></td>';   
     }
-
-    $('#geographyList table tbody').html(geoTableContent);
-        
+    
+    $('#connectionCounts table tbody').html(repeatTableContents);
+    
     
 
     // jQuery AJAX call for JSON
@@ -374,13 +373,13 @@ function populateAccessTable() {
            repeatCount[this.value] = repeatCount[this.value] - 100000;
            sortedIPcounts[index] = sortedIPcounts[index] - 100000;
         });
-        
-        
-        // Fill table with unique regions and counts -  DoS Attempt Tracker
-        for (i = 0; i < sortedIPcounts.length; i++) {
-            repeatTableContents += '<tr>';
-            repeatTableContents += '<td><font size="3">' + sortedIP[i] + '</font></td><td><font size="3">' + sortedCountry[i] + "/" + sortedRegion[i] + '</font></td>';
-            repeatTableContents += '<td><font size="3">' + sortedIPcounts[i].toString() + '</font></td>';   
+    
+        // NEED TO FIX table by getting each country/region pair!
+        // Fill table with unique regions and counts
+        for (i = 0; i < regionByIpCounts.length; i++) {
+            geoTableContent += '<tr>';
+            geoTableContent += '<td><font size="3">' + countryByIpCounts[i] + '</font></td><td><font size="3">' + uniqueRegion[i] + '</font></td>';
+            geoTableContent += '<td><font size="3">' + regionByIpCounts[i].toString() + '</font></td>';   
         }
         
         $('#geographyList table tbody').html(geoTableContent);
