@@ -302,6 +302,22 @@ function populateAccessTable() {
 		$('#connectionCounts table tbody').html(repeatTableContents);
         
         
+        // TOO many sorted IP counts for pie chart to look reasonable, will sum past 5 slices to "other" slice
+        if (sortedIPcounts.length >= 5) {
+            var abbreviatedIPcounts = [],
+                abbreviatedIPlist = [];
+            for (i = 0; i < sortedIPcounts.length; i++) {
+                if ( i < 5) {
+                    abbreviatedIPcounts.push(sortedIPcounts[i]);
+                    abbreviatedIPlist.push(sortedSuperdata[i].accessInfoIP);
+                }
+                else {
+                    abbreviatedIPcounts[4] = abbreviatedIPcounts[4] + sortedIPcounts[5];
+                }
+            }
+            abbreviatedIPlist[4] = 'Other';
+        }
+        
 		/* Make the Pie chart */
         var makeNewChart;
 		
@@ -311,8 +327,8 @@ function populateAccessTable() {
         var col2 = [220, 220, 0];
         
         // One color doesn't interpolate correct so just skip for less than 3 colors
-        if (sortedSuperdata.length > 2) {
-            var colorsRGB = colorInterp(col1, col2, sortedSuperdata.length);
+        if (abbreviatedIPlist.length > 2) {
+            var colorsRGB = colorInterp(col1, col2, abbreviatedIPlist.length);
             $.each (colorsRGB, function() {
                 colors.push(rgbToHex(this));
             });
@@ -325,8 +341,8 @@ function populateAccessTable() {
         col1 = [50, 255, 255];
         col2 = [255, 255, 50];
 
-        if (sortedSuperdata.length > 2) {
-            var highlightsRGB = colorInterp(col1, col2, sortedSuperdata.length);
+        if (abbreviatedIPlist.length > 2) {
+            var highlightsRGB = colorInterp(col1, col2, abbreviatedIPlist.length);
             $.each (highlightsRGB, function() {
                 highlights.push(rgbToHex(this));
             });
@@ -339,7 +355,7 @@ function populateAccessTable() {
             makeNewChart = true;
         }
         else {
-            if (ipChart.segments.length !== regionByIpCounts.length) {
+            if (ipChart.segments.length !== abbreviatedIPlist.length) {
                 ipChart.destroy();
                 makeNewChart = true;
             }
@@ -351,10 +367,10 @@ function populateAccessTable() {
            // Create Pie Chart of first result
             var data1 = [
                 {
-                    value: sortedIPcounts[0],
+                    value: abbreviatedIPcounts[0],
                     color: colors[0],
                     highlight: highlights[0],
-                    label: sortedSuperdata[0].accessInfoIP
+                    label: abbreviatedIPlist[0]
                 }
             ];
           
@@ -362,20 +378,19 @@ function populateAccessTable() {
             var ctx = $("#ipChart").get(0).getContext("2d");
            
             var options = {
-                // TWO EXTRA ENTRIES? <h3>Legend</h3>
-                legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
+                animation: false,
+                legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%='IP'+(i+1)%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
             };
          
             // This will get the first returned node in the jQuery collection.
             var ipChart = new Chart(ctx).Pie(data1,options);
          
-
             // Pie chart is expandable for when new regions connect
-            $.each(sortedIPcounts, function (index) {
+            $.each(abbreviatedIPcounts, function (index) {
                 if (index > 0) {
                     ipChart.addData({
                         value: this,
-                        label: sortedSuperdata[index].accessInfoIP,
+                        label: abbreviatedIPlist[index],
                         color: colors[index],
                         highlight: highlights[index]
                     });
@@ -383,8 +398,8 @@ function populateAccessTable() {
             });
         }
         else {
-            $.each(regionByIpCounts, function (index) {
-                ipChart.segments[index].value = sortedIPcounts[index];
+            $.each(abbreviatedIPlist, function (index) {
+                ipChart.segments[index].value = abbreviatedIPcounts[index];
             });
         }
         
@@ -514,8 +529,8 @@ function populateAccessTable() {
             var ctx = $("#locChart").get(0).getContext("2d");
            
             var options = {
-                // TWO EXTRA ENTRIES? <h3>Legend</h3>
-                legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
+                 animation: false,
+                 legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
             };
          
             // This will get the first returned node in the jQuery collection.
