@@ -71,7 +71,15 @@ block content
                         th Location
                         th Count
                     tbody
-                    
+           div(class="col-xs-6 col-md-4")    
+                h2 IP Pageloads
+                #myChart
+                    canvas(id="ipChart" width="400" height="400")
+                #chartLegend
+                    #ipLegend
+                 
+                 
+         div(class='row')          
            div(class="col-xs-6 col-md-4")                         
              #listType
                h2 Unique Regions
@@ -83,10 +91,12 @@ block content
                         th Count
                     tbody
                     
-           div(class="col-xs-6 col-md-4")       
-                 h2 Unique Regions
-                 canvas(id="myChart" width="400" height="400")
-                 #chartLegend
+           div(class="col-xs-6 col-md-4") 
+                h2 Unique Regions
+                #myChart
+                    canvas(id="locChart" width="400" height="400")
+                #chartLegend
+                    #locLegend
                  
          div(class='row')
            div(class="col-xs-10 col-md-6")     

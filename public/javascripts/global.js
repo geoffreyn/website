@@ -299,8 +299,96 @@ function populateAccessTable() {
 			repeatTableContents += '<td><font size="3">' + sortedSuperdata[i].accessInfoIP + '</font></td><td><font size="3">' + sortedSuperdata[i].accessCountry + "/" +  sortedSuperdata[i].accessRegion + '</font></td>';
 			repeatTableContents += '<td><font size="3">' + sortedIPcounts[i].toString() + '</font></td>';   
 		}
-    
 		$('#connectionCounts table tbody').html(repeatTableContents);
+        
+        
+		/* Make the Pie chart */
+        var makeNewChart;
+		
+        //Determine color cycle of pie chart
+        var colors = [];
+        var col1 = [0, 220, 220];
+        var col2 = [220, 220, 0];
+        
+        // One color doesn't interpolate correct so just skip for less than 3 colors
+        if (sortedSuperdata.length > 2) {
+            var colorsRGB = colorInterp(col1, col2, sortedSuperdata.length);
+            $.each (colorsRGB, function() {
+                colors.push(rgbToHex(this));
+            });
+        }
+        else {
+            colors = [rgbToHex(col1), rgbToHex(col2)];
+        }
+        
+        var highlights = [];
+        col1 = [50, 255, 255];
+        col2 = [255, 255, 50];
+
+        if (sortedSuperdata.length > 2) {
+            var highlightsRGB = colorInterp(col1, col2, sortedSuperdata.length);
+            $.each (highlightsRGB, function() {
+                highlights.push(rgbToHex(this));
+            });
+        }
+        else {
+            highlights = [rgbToHex(col1), rgbToHex(col2)];
+        }
+        
+        if (typeof ipChart === "undefined") {
+            makeNewChart = true;
+        }
+        else {
+            if (ipChart.segments.length !== regionByIpCounts.length) {
+                ipChart.destroy();
+                makeNewChart = true;
+            }
+            else {
+                makeNewChart = false;
+            }
+        }
+        if (makeNewChart) {
+           // Create Pie Chart of first result
+            var data1 = [
+                {
+                    value: sortedIPcounts[0],
+                    color: colors[0],
+                    highlight: highlights[0],
+                    label: sortedSuperdata[0].accessInfoIP
+                }
+            ];
+          
+            // Get context with jQuery - using jQuery's .get() method.
+            var ctx = $("#ipChart").get(0).getContext("2d");
+           
+            var options = {
+                // TWO EXTRA ENTRIES? <h3>Legend</h3>
+                legendTemplate : "<p><% for (i=0; i<(segments.length); i++){%><span class=\"labelblock\"><span class=\"colorblock\" style=\"background-color:<%=segments[i].fillColor%>\">  </span><span class=\"textblock\"><%if(segments[i].label){%><%=segments[i].label%>=<%=segments[i].value%><%}%>  </span></span><%}%></p>"
+            };
+         
+            // This will get the first returned node in the jQuery collection.
+            var ipChart = new Chart(ctx).Pie(data1,options);
+         
+
+            // Pie chart is expandable for when new regions connect
+            $.each(sortedIPcounts, function (index) {
+                if (index > 0) {
+                    ipChart.addData({
+                        value: this,
+                        label: sortedSuperdata[index].accessInfoIP,
+                        color: colors[index],
+                        highlight: highlights[index]
+                    });
+                }
+            });
+        }
+        else {
+            $.each(regionByIpCounts, function (index) {
+                ipChart.segments[index].value = sortedIPcounts[index];
+            });
+        }
+        
+        $('#ipLegend').html(ipChart.generateLegend());
     });
     
     $.getJSON('/analytics/unique/accessInfoIP', { user: 'admin', pass: 'password' } , function( data ) {
@@ -363,9 +451,8 @@ function populateAccessTable() {
             geoTableContent += '<td><font size="3">' + sortedCountry[i] + '</font></td><td><font size="3">' + sortedRegion[i] + '</font></td>';
             geoTableContent += '<td><font size="3">' + sortedRegionCounts[i].toString() + '</font></td>';   
         }
-		
-		
         $('#geographyList table tbody').html(geoTableContent);
+        
         
 		/* Make the Pie chart */
         var makeNewChart;
@@ -424,7 +511,7 @@ function populateAccessTable() {
             ];
           
             // Get context with jQuery - using jQuery's .get() method.
-            var ctx = $("#myChart").get(0).getContext("2d");
+            var ctx = $("#locChart").get(0).getContext("2d");
            
             var options = {
                 // TWO EXTRA ENTRIES? <h3>Legend</h3>
@@ -452,8 +539,7 @@ function populateAccessTable() {
                 locationChart.segments[index].value = regionByIpCounts[index];
             });
         }
-        
-        $('#chartLegend').html(locationChart.generateLegend());
+        $('#locLegend').html(locationChart.generateLegend());
 	});
 	   
     // jQuery AJAX call for JSON
