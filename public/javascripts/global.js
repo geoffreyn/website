@@ -477,8 +477,8 @@ function populateAccessTable() {
         $('#accessList table tbody').html(tableContent);
         
 		// Possibly class tags are screwed up - if we don't inject blank HTML, it will async inject the full #accessList table contents
-        $('#geographyList table tbody').html('');
-        $('#connectionCounts table tbody').html('');
+        // $('#geographyList table tbody').html('');
+        // $('#connectionCounts table tbody').html('');
         
     });
 }

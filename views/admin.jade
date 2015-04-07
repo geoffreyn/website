@@ -61,8 +61,8 @@ block content
                         tbody
                         
          div(class='row')
-           div(class="col-xs-6 col-md-4")            
-             #accessList              
+           div(class="col-xs-6 col-md-4")      
+             #listType
                #connectionCounts
                  h2 DoS Highscores
                   table
@@ -72,8 +72,8 @@ block content
                         th Count
                     tbody
                     
-           div(class="col-xs-6 col-md-4")           
-             #accessList                
+           div(class="col-xs-6 col-md-4")                         
+             #listType
                h2 Unique Regions
                 #geographyList
                  table
@@ -89,17 +89,18 @@ block content
                  #chartLegend
                  
          div(class='row')
-           div(class="col-xs-10 col-md-6")      
-             #accessList
-               h2 Last 25 Access Log Entries
-                table
-                    thead
-                        th Address
-                        th IP
-                        th Time
-                        th Location
-                        th Delete
-                    tbody
+           div(class="col-xs-10 col-md-6")     
+              #listType           
+                 #accessList
+                   h2 Last 25 Access Log Entries
+                    table
+                        thead
+                            th Address
+                            th IP
+                            th Time
+                            th Location
+                            th Delete
+                        tbody
 
     //.
       h3
