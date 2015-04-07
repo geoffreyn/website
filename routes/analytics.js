@@ -14,10 +14,55 @@ var auth = basicAuth(function(user, pass, callback) {
  * GET access list.
  */
 router.get('/accessList', auth, function(req, res) {
+  var db = req.db; 
+
+  db.collection('accessList').find({},{limit:25}).sort({accessInfoTime:-1}).toArray(function (err, items) {
+      res.json(items);
+  });
+});
+
+/*
+ * GET a page of access list.
+ */
+router.get('/accessList/:page', auth, function(req, res) {
   var db = req.db;
-  db.collection('accessList').find().toArray(function (err, items) {
+ 
+  db.collection('accessList').find({},{skip:(25 * req.params.page), limit:25}).sort({accessInfoTime:-1}).toArray(function (err, items) {
     res.json(items);
   });
+});
+
+/*
+ * GET unique entries of type specified.
+ */
+router.get('/unique/:type', auth, function(req, res) {
+    var db = req.db;
+    // console.log(req.params.type);
+    db.collection('accessList').distinct(req.params.type, (function (err, items) {
+    if (err) { 
+        console.log(err);
+        return;
+    }
+    res.json(items);
+    }));
+});
+
+/*
+ * COUNT entries of type and value specified.
+ */
+router.get('/:type/:str', auth, function(req, res) {
+    var db = req.db;
+    //eval('var tempType = "' + req.params.type + '"'); <- Probably would have worked and been easier to read!
+    
+    //if they request /all/all return the total count
+    if (req.params.type === "all") {
+        db.collection('accessList').count(function (err, count) { res.json(count); });
+    }
+    // Otherwise we need an eval because type is interpreted literally not as a variable
+    else {
+        var findStr = req.params.type + ': ' + '"' + req.params.str + '"';
+        eval("db.collection('accessList').count({" + findStr + "}, function (err, count) { res.json(count); });");
+    }
 });
 
 /*
