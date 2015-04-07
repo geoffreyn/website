@@ -230,14 +230,7 @@ function populateAccessTable() {
     // For loop variable
     var count = -1;
     
-    // Fill variable regions with name of all regions from access logs
-    var regions = [];
-    var geos = [];
-    var locers = [];
-	
-    var uniqueIP = ajaxRequest('/analytics/unique/accessInfoIP');
     var uniqueRegions = ajaxRequest('/analytics/unique/accessRegion');
-    var uniqueCountry = ajaxRequest('/analytics/unique/accessCountry');
     
     var regionCounts = [];
     var badIndex = [];
@@ -249,6 +242,7 @@ function populateAccessTable() {
             regionCounts.push(ajaxRequest('/analytics/count/accessRegion/' + this.valueOf()));
         }
         else {
+            // Store unlisted regions indices and temporarily fill with 0's
             regionCounts.push(0);
             badIndex.push(index);
         }
