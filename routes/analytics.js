@@ -50,7 +50,7 @@ router.get('/unique/:type', auth, function(req, res) {
 /*
  * COUNT entries of type and value specified.
  */
-router.get('/:type/:str', auth, function(req, res) {
+router.get('/count/:type/:str', auth, function(req, res) {
     var db = req.db;
     //eval('var tempType = "' + req.params.type + '"'); <- Probably would have worked and been easier to read!
     
@@ -63,6 +63,18 @@ router.get('/:type/:str', auth, function(req, res) {
         var findStr = req.params.type + ': ' + '"' + req.params.str + '"';
         eval("db.collection('accessList').count({" + findStr + "}, function (err, count) { res.json(count); });");
     }
+});
+
+/*
+ * GET PROPERTY values based on first entry of type and value specified.
+ */
+router.get('/:type/:str', auth, function(req, res) {
+    var db = req.db;
+    //eval('var tempType = "' + req.params.type + '"'); <- Probably would have worked and been easier to read!
+
+	var findStr = req.params.type + ': ' + '"' + req.params.str + '"';
+	eval("db.collection('accessList').find({" + findStr + "},{limit: 1}).toArray(function(err,item) {res.json(item);});");
+
 });
 
 /*

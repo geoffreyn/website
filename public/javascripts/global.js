@@ -1,9 +1,12 @@
 "use strict";
 
-// Userlist data array for filling in info box
+// Data arrays for filling in info box
 var userListData = [];
 var accessListData = [];
 var socket = io.connect();
+
+// For loop variable
+var i, j = 0;
 
 // Functions ============================================
 
@@ -147,6 +150,44 @@ function deleteUser(event) {
 
 }
 
+//Helper functions for generating gradient
+function _interpolation(a, b, factor) {
+	var ret = [];
+	for (i = 0; i < Math.min(a.length, b.length); i++) {
+		ret.push(a[i] * (1 - factor) + b[i] * factor);
+	}
+	return ret;
+}
+
+function colorInterp(start, end, n) {
+	var ret = [];
+	for (j = 0; j < n; j++) {
+		//var color = new Color();
+		var rgb = _interpolation(start, end, j / (n - 1));
+		//color.setRGB(rgb[0], rgb[1], rgb[2]);
+		ret.push(rgb);
+	}
+	return ret;
+}
+
+function decimalToHexString(number)
+{
+	if (number < 0)
+	{
+		number = 0xFFFFFFFF + number + 1;
+	}
+	if (number < 10) {
+		return "0" + Math.ceil(number).toString(16).toUpperCase();
+	}
+	else {
+		return Math.ceil(number).toString(16).toUpperCase();
+	}
+}
+
+function rgbToHex(r) {
+	return "#" + decimalToHexString(r[0]) + decimalToHexString(r[1]) + decimalToHexString(r[2]);
+}
+
 
 function ajaxRequest(urlIn) {
     var output;
@@ -162,6 +203,21 @@ function ajaxRequest(urlIn) {
     return output;
 }
 
+function sortWithIndeces(toSort) {
+	for (var i = 0; i < toSort.length; i++) {
+		toSort[i] = [toSort[i], i];
+	}
+	toSort.sort(function(left, right) {
+		return left[0] > right[0] ? -1 : 1;
+	});
+	toSort.sortIndices = [];
+	for (var j = 0; j < toSort.length; j++) {
+		toSort.sortIndices.push(toSort[j][1]);
+		toSort[j] = toSort[j][0];
+	}
+	return toSort;
+}
+		
 // Fill table with data
 function populateAccessTable() {
                
@@ -172,15 +228,15 @@ function populateAccessTable() {
     var superdata = [];
     
     // For loop variable
-    var i,j = 0;
     var count = -1;
     
     // Fill variable regions with name of all regions from access logs
     var regions = [];
     var geos = [];
     var locers = [];
-    var uniqueRegions = ajaxRequest('/analytics/unique/accessRegion');
+	
     var uniqueIP = ajaxRequest('/analytics/unique/accessInfoIP');
+    var uniqueRegions = ajaxRequest('/analytics/unique/accessRegion');
     var uniqueCountry = ajaxRequest('/analytics/unique/accessCountry');
     
     var regionCounts = [];
@@ -190,7 +246,7 @@ function populateAccessTable() {
     $.each(uniqueRegions, function( index ) {
         // Request the region's count unless the region is blank
         if (this.valueOf() !== "") {
-            regionCounts.push(ajaxRequest('/analytics/accessRegion/' + this.valueOf()));
+            regionCounts.push(ajaxRequest('/analytics/count/accessRegion/' + this.valueOf()));
         }
         else {
             regionCounts.push(0);
@@ -204,7 +260,7 @@ function populateAccessTable() {
             return a + b;
         });
     }
-    var totalCount =  ajaxRequest('/analytics/all/all');
+    var totalCount =  ajaxRequest('/analytics/count/all/all');
     
     // Replace each 0 with the missing value (If more than one zero this will screw up total count)
     $.each(badIndex, function() {
@@ -213,106 +269,59 @@ function populateAccessTable() {
         });
     });
     
-    // Fill table with unique regions and counts -  DoS Attempt Tracker
-    for (i = 0; i < regionCounts.length; i++) {
-        repeatTableContents += '<tr>';
-        repeatTableContents += '<td><font size="3">' + uniqueIP[i] + '</font></td><td><font size="3">' + uniqueCountry[i] + "/" + uniqueRegions[i] + '</font></td>';
-        repeatTableContents += '<td><font size="3">' + regionCounts[i].toString() + '</font></td>';   
-    }
-    
-    $('#connectionCounts table tbody').html(repeatTableContents);
-    
-    
-
+	// NEW method
+	
     // jQuery AJAX call for JSON
-    $.getJSON( '/analytics/accessList', { user: 'admin', pass: 'password' } , function( data ) {
+    $.getJSON('/analytics/unique/accessInfoIP', { user: 'admin', pass: 'password' } , function( data ) {
 
+		/* FILL DoS table first */
+		var superdata = [];
+		var ipCounts = [];
         // For each item in our JSON, add a table row and cells to the content string
-       $.each(data, function( ) {
-           tableContent += '<tr>';
-           tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
-           tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
-           if (this.hasOwnProperty('accessRegion')) {
-               tableContent += '<td><font size="3">' + this.accessCountry + '/' + this.accessRegion + '</font></td>';
-           }
-           else {
-                tableContent += '<td><font size="3">??</font></td><td><font size="3">??</font></td>';
-           }
-           tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
-           tableContent += '</tr>'; 
-      
-        });
-        
-        count = -1;
-        $.each(data, function(index) {
-            if (this.hasOwnProperty('accessRegion')) { 
-                    count++;
-                    if (this.accessRegion === '') {
-                        regions.push('??');
-                    }
-                    else {
-                        regions.push(this.accessRegion);
-                    }
-                    geos.push(this.accessCountry);
-                    locers.push(index);
-                    superdata.push({
-                        accessRegion: this.accessRegion,
-                        accessCountry: this.accessCountry,
-                        accessInfoIP: this.accessInfoIP
-                    });
-                    //superdata[count] = this;
-            }
-        });
-        // Inject the whole content string into our existing HTML tables
-        $('#accessList table tbody').html(tableContent);
-        
-            
-        function compare(a,b) {
-          if (a.accessInfoIP < b.accessInfoIP) {
-             return -1;
-          }
-          if (a.accessInfoIP > b.accessInfoIP) {
-            return 1;
-          }
-          return 0;
-        }
-
-        var sortedByIP = superdata.sort(compare);
-        var lastIp = '0';
-        var repeatCount = [];
-        var repeatRegion = [];
-        var uniqueIP = [];
-        var repeatCountry = [];
-        var makeNewChart;
-        count = -1;
-        $.each(sortedByIP, function(index) {
-        // if (index === 0) {
-            // repeatCount[0]
-        // }
-        // else {
-            if (this.accessInfoIP.toLowerCase() !== lastIp.toLowerCase()) {
-                // If they don't have a region just call it the country they're in
-                if (this.accessRegion === '') {
-                    repeatRegion.push(this.accessCountry);
-                }
-                else {
-                    repeatRegion.push(this.accessRegion);
-                }
-                repeatCountry.push(this.accessCountry);
-                uniqueIP.push(this.accessInfoIP);
-                repeatCount.push(1);
-                lastIp = this.accessInfoIP;
-                count++;
-            }
-            else {
-                repeatCount[count]++;
-            }
-        // }
-        
-        });
-
-        //console.log(uniqueRegion + repeatCountry + uniqueIP + repeatCount);
-        
+        $.each(data, function( index ) {
+			superdata.push(ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0]);
+			ipCounts.push(ajaxRequest('/analytics/count/accessInfoIP/' + this.valueOf()));
+			if (superdata[index].accessRegion === "") {
+				superdata[index].accessRegion = superdata[index].accessCountry;
+			}
+	    });
+	    
+		var sortedIPcounts = sortWithIndeces(ipCounts);
+		var	sortedSuperdata = [];
+	
+		$.each(sortedIPcounts.sortIndices, function () {
+			sortedSuperdata.push(superdata[this.valueOf()]);
+		});
+		
+		// Fill table with unique regions and counts -  DoS Attempt Tracker
+		for (i = 0; i < sortedIPcounts.length; i++) {
+			repeatTableContents += '<tr>';
+			repeatTableContents += '<td><font size="3">' + sortedSuperdata[i].accessInfoIP + '</font></td><td><font size="3">' + sortedSuperdata[i].accessCountry + "/" +  sortedSuperdata[i].accessRegion + '</font></td>';
+			repeatTableContents += '<td><font size="3">' + sortedIPcounts[i].toString() + '</font></td>';   
+		}
+    
+		$('#connectionCounts table tbody').html(repeatTableContents);
+    
+		/* FILL Region table and pie chart next */
+		
+		var repeatCountry = [];
+		var repeatRegion = [];
+		var curRegion = '';
+		var curCountry = '';
+        var uniqueIP = ajaxRequest('/analytics/unique/accessInfoIP');
+	    $.each(uniqueIP, function( ) {
+				curCountry = ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0].accessCountry;
+				curRegion = ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0].accessRegion;
+				repeatCountry.push(curCountry)
+				// Replace blank regions with the name of the country they lie in
+				if (curRegion === "") {
+					repeatRegion.push(curCountry);
+				}
+				else {
+					repeatRegion.push(curRegion);
+				}
+		});
+		
         function onlyUnique(value, index, self) {
             if (self.indexOf(value) === index) {
                 countryByIpCounts.push(repeatCountry[index]);
@@ -331,99 +340,34 @@ function populateAccessTable() {
             }
             return count;
         };
-        var regionCounts = [];
-        $.each(repeatRegion, function() {
-            regionCounts.push(regions.count(this.valueOf()));
-        });
-        
+		
         var regionByIpCounts = [];
-        $.each(repeatCount, function( index ) {
+        $.each(uniqueRegion, function( index ) {
             regionByIpCounts.push(repeatRegion.count(uniqueRegion[index]));
         });
-        
-        // Sort ips and regions by access attempts
-        var sortedRegion = [];
-        var sortedCountry = [];
-        var sortedIP = [];
-        var repeatList = [];
-        
-        for (i = 0; i < repeatCount.length; i++) {
-            for (j = i+1; j < repeatCount.length; j++) {
-                if (repeatCount[j] === repeatCount[i]) {
-                    repeatCount[j] = repeatCount[j] + 100000;
-                    repeatList.push(j);
-                }
-            }
-        }
-                
-        var sortedIPcounts = repeatCount.slice(0).sort(function(a, b){return b-a;});
-        var k = 0;
-        
-        $.each(sortedIPcounts, function(index) {
-            for (i = 0; i < sortedIPcounts.length; i++) {
-                if (this.valueOf() === repeatCount[i]) {
-                    sortedRegion.push(repeatRegion[i]);
-                    sortedCountry.push(repeatCountry[i]);
-                    sortedIP.push(uniqueIP[i]);
-                }
-            }
-        });
-        
-        $.each(repeatList, function (index) {
-           repeatCount[this.value] = repeatCount[this.value] - 100000;
-           sortedIPcounts[index] = sortedIPcounts[index] - 100000;
-        });
-    
-        // NEED TO FIX table by getting each country/region pair!
-        // Fill table with unique regions and counts
+		
+		var sortedRegionCounts = sortWithIndeces(regionByIpCounts);
+		var	sortedCountry = [];
+		var sortedRegion = [];
+	
+		$.each(sortedRegionCounts.sortIndices, function () {
+			sortedCountry.push(countryByIpCounts[this.valueOf()]);
+			sortedRegion.push(uniqueRegion[this.valueOf()]);
+		});
+		
+        // Fill table with SORTED unique regions and counts
         for (i = 0; i < regionByIpCounts.length; i++) {
             geoTableContent += '<tr>';
-            geoTableContent += '<td><font size="3">' + countryByIpCounts[i] + '</font></td><td><font size="3">' + uniqueRegion[i] + '</font></td>';
-            geoTableContent += '<td><font size="3">' + regionByIpCounts[i].toString() + '</font></td>';   
+            geoTableContent += '<td><font size="3">' + sortedCountry[i] + '</font></td><td><font size="3">' + sortedRegion[i] + '</font></td>';
+            geoTableContent += '<td><font size="3">' + sortedRegionCounts[i].toString() + '</font></td>';   
         }
-        
+		
+		
         $('#geographyList table tbody').html(geoTableContent);
         
-        $('#connectionCounts table tbody').html(repeatTableContents);
-        
-        //Helper functions for generating gradient
-        function _interpolation(a, b, factor) {
-            var ret = [];
-            for (i = 0; i < Math.min(a.length, b.length); i++) {
-                ret.push(a[i] * (1 - factor) + b[i] * factor);
-            }
-            return ret;
-        }
-        
-        function colorInterp(start, end, n) {
-            var ret = [];
-            for (j = 0; j < n; j++) {
-                //var color = new Color();
-                var rgb = _interpolation(start, end, j / (n - 1));
-                //color.setRGB(rgb[0], rgb[1], rgb[2]);
-                ret.push(rgb);
-            }
-            return ret;
-        }
-        
-        function decimalToHexString(number)
-        {
-            if (number < 0)
-            {
-                number = 0xFFFFFFFF + number + 1;
-            }
-            if (number < 10) {
-                return "0" + Math.ceil(number).toString(16).toUpperCase();
-            }
-            else {
-                return Math.ceil(number).toString(16).toUpperCase();
-            }
-        }
-        
-        function rgbToHex(r) {
-            return "#" + decimalToHexString(r[0]) + decimalToHexString(r[1]) + decimalToHexString(r[2]);
-        }
-
+		/* Make the Pie chart */
+        var makeNewChart;
+		
         //Determine color cycle of pie chart
         var colors = [];
         var col1 = [220, 0, 0]; // some red
@@ -508,6 +452,34 @@ function populateAccessTable() {
         }
         
         $('#chartLegend').html(locationChart.generateLegend());
+	});
+	   
+    // jQuery AJAX call for JSON
+    $.getJSON( '/analytics/accessList', { user: 'admin', pass: 'password' } , function( data ) {
+
+        // For each item in our JSON, add a table row and cells to the content string
+       $.each(data, function( ) {
+           tableContent += '<tr>';
+           tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
+           tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
+           if (this.hasOwnProperty('accessRegion')) {
+               tableContent += '<td><font size="3">' + this.accessCountry + '/' + this.accessRegion + '</font></td>';
+           }
+           else {
+                tableContent += '<td><font size="3">??</font></td><td><font size="3">??</font></td>';
+           }
+           tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
+           tableContent += '</tr>'; 
+      
+        });
+        
+        // Inject the whole content string into		our existing HTML tables
+        $('#accessList table tbody').html(tableContent);
+        
+		// Possibly class tags are screwed up - if we don't inject blank HTML, it will async inject the full #accessList table contents
+        $('#geographyList table tbody').html('');
+        $('#connectionCounts table tbody').html('');
+        
     });
 }
 
