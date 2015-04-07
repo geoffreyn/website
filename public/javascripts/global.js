@@ -203,7 +203,7 @@ function ajaxRequest(urlIn) {
     return output;
 }
 
-function sortWithIndeces(toSort) {
+function sortWithIndices(toSort) {
 	for (var i = 0; i < toSort.length; i++) {
 		toSort[i] = [toSort[i], i];
 	}
@@ -225,10 +225,30 @@ function populateAccessTable() {
     var tableContent = '';
     var repeatTableContents = '';    
     var geoTableContent = '';
-    var superdata = [];
     
     // For loop variable
     var count = -1;
+    
+    // Determine which webpages are hottest
+    
+    // jQuery AJAX call for JSON
+    // $.getJSON('/analytics/unique/accessInfoAddress', { user: 'admin', pass: 'password' } , function( data ) {
+        
+        // var pageCounts = [];
+        // $.each(data,function(index) {
+            // pageCounts.push(ajaxRequest('/analytics/count/accessInfoAddress/"' + this.valueOf()) +'"');
+        // });
+        
+        // var sortedPages = [];
+        // sortedPageCounts = sortWithIndices(pageCounts);
+        // $.each(sortedPageCounts, function(index) {
+            // sortedPages.push(data[this.sortIndices]);
+        // });
+        
+        // console.log(sortedPages + " + " + sortedPageCounts);
+        
+        
+    // });
     
     var uniqueRegions = ajaxRequest('/analytics/unique/accessRegion');
     
@@ -280,7 +300,7 @@ function populateAccessTable() {
 			}
 	    });
 	    
-		var sortedIPcounts = sortWithIndeces(ipCounts);
+		var sortedIPcounts = sortWithIndices(ipCounts);
 		var	sortedSuperdata = [];
 	
 		$.each(sortedIPcounts.sortIndices, function () {
@@ -445,7 +465,7 @@ function populateAccessTable() {
             regionByIpCounts.push(repeatRegion.count(uniqueRegion[index]));
         });
 		
-		var sortedRegionCounts = sortWithIndeces(regionByIpCounts);
+		var sortedRegionCounts = sortWithIndices(regionByIpCounts);
 		var	sortedCountry = [];
 		var sortedRegion = [];
 	
