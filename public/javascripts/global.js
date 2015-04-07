@@ -301,7 +301,9 @@ function populateAccessTable() {
 		}
     
 		$('#connectionCounts table tbody').html(repeatTableContents);
+    });
     
+    $.getJSON('/analytics/unique/accessInfoIP', { user: 'admin', pass: 'password' } , function( data ) {
 		/* FILL Region table and pie chart next */
 		
 		var repeatCountry = [];
