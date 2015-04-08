@@ -2,7 +2,6 @@
 
 // Data arrays for filling in info box
 var userListData = [];
-var accessListData = [];
 var socket = io.connect();
 
 // For loop variable
@@ -268,12 +267,6 @@ function populateAccessTable() {
         }
     });
     
-    // If the region is blank replace that value with the difference between the total counts and all other regions
-    function sum(arr) {
-        arr.reduce(function(a, b) {
-            return a + b;
-        });
-    }
     var totalCount =  ajaxRequest('/analytics/count/all/all');
     
     // Replace each 0 with the missing value (If more than one zero this will screw up total count)
@@ -315,11 +308,12 @@ function populateAccessTable() {
 		}
 		$('#connectionCounts table tbody').html(repeatTableContents);
         
-        
+        var abbreviatedIPcounts = [],
+              abbreviatedIPlist = [];
+              
         // TOO many sorted IP counts for pie chart to look reasonable, will sum past 5 slices to "other" slice
         if (sortedIPcounts.length >= 5) {
-            var abbreviatedIPcounts = [],
-                abbreviatedIPlist = [];
+            
             for (i = 0; i < sortedIPcounts.length; i++) {
                 if ( i < 5) {
                     abbreviatedIPcounts.push(sortedIPcounts[i]);
@@ -334,7 +328,8 @@ function populateAccessTable() {
         
 		/* Make the Pie chart */
         var makeNewChart;
-		
+		var ipChart;
+        
         //Determine color cycle of pie chart
         var colors = [];
         var col1 = [0, 220, 220];
@@ -397,7 +392,7 @@ function populateAccessTable() {
             };
          
             // This will get the first returned node in the jQuery collection.
-            var ipChart = new Chart(ctx).Pie(data1,options);
+            ipChart = new Chart(ctx).Pie(data1,options);
          
             // Pie chart is expandable for when new regions connect
             $.each(abbreviatedIPcounts, function (index) {
@@ -431,7 +426,7 @@ function populateAccessTable() {
 	    $.each(uniqueIP, function( ) {
 				curCountry = ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0].accessCountry;
 				curRegion = ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0].accessRegion;
-				repeatCountry.push(curCountry)
+				repeatCountry.push(curCountry);
 				// Replace blank regions with the name of the country they lie in
 				if (curRegion === "") {
 					repeatRegion.push(curCountry);
@@ -485,7 +480,8 @@ function populateAccessTable() {
         
 		/* Make the Pie chart */
         var makeNewChart;
-		
+		var locationChart;
+        
         //Determine color cycle of pie chart
         var colors = [];
         var col1 = [220, 0, 0]; // some red
@@ -548,7 +544,7 @@ function populateAccessTable() {
             };
          
             // This will get the first returned node in the jQuery collection.
-            var locationChart = new Chart(ctx).Pie(data1,options);
+            locationChart = new Chart(ctx).Pie(data1,options);
          
 
             // Pie chart is expandable for when new regions connect
