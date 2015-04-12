@@ -12,6 +12,7 @@
   "dependencies": {
     "basic-auth-connect": "~1.0.0",
     "body-parser": "~1.12.0",
+    "cookie-parser": "*",
     "connect": "~3.3.5",
     "express": "~4.12.2",
     "jade": "~1.9.2",
