@@ -17,6 +17,8 @@
     "jade": "~1.9.2",
     "mongodb": "~1.4",
     "mongoskin": "~1.4.13",
+    "morgan": "~1.5.1",
+    "path": "^0.11.14",
     "nib": "~1.1.0",
     "serve-favicon": "~2.2.0",
     "socket.io": "^1.3.5",
