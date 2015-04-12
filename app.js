@@ -32,9 +32,7 @@ geoffapp.use(function(req, res, next) {
     next();
 });
 
-  
 var app = express();
-
 
 var server = require('http').createServer(app);
 app.set('port', process.env.PORT || 3000);
