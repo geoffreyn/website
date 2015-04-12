@@ -1,14 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
 var basicAuth = require('basic-auth-connect');
-
-// Authenticator - Asynchronous
-
-var auth = basicAuth(function(user, pass, callback) {
- var result = (user === 'admin' && pass === 'password');
- callback(null /* error */, result);
-});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -40,7 +32,13 @@ router.get('/flickr_album',function(req, res, next) {
   res.render('flickr_album', { title: 'My Flickr Album' });
 });
 
-/* GET Admin page. */
+// Authenticator - Asynchronous
+var auth = basicAuth(function(user, pass, callback) {
+ var result = (user === 'admin' && pass === 'password');
+ callback(null /* error */, result);
+});
+
+/* New Admin page. */
 router.get('/admin',auth,function(req, res, next) {
     res.render('admin', {title: 'Access Analytics'});
 });
@@ -50,9 +48,9 @@ router.get('/layout',auth,function(req, res, next) {
   res.render('layout', { title: 'Blank layout for the curious' });
 });
 
-/* GET Plotting page */
-router.get('/plots',function(req, res, next) {
-  res.render('plotting', { title: 'Data Visualization' });
+/* GET demo page for Data Incubator Challenge Question 3 */
+router.get('/demo/:id',function(req, res, next) {
+  res.render('demo'+ req.params.id, { title: 'Data Incubator Challenge Question 3 Demo, figure: ' + req.params.id });
 });
 
 module.exports = router;

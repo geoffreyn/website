@@ -1,0 +1,20 @@
+extends layout
+
+block content
+
+    #mainbody
+    
+        h1= title
+
+        a(class="image-link", href="/images/challenge3part1.png")
+            img#portrait(src='/images/challenge3part1.png', alt="Figure 2", title="Figure 2")
+
+        #figs
+        
+            p
+                | This figure is based on the search term "I would like a straight fit pair of jeans that fit well."
+                | It shows the top results to comparing this string to the text of the Amazon.com reviews for Clothing & Accessories collected over a period of 18 years.  
+                | The products that occur in the top 300 matches (In this case the same products had 10-all words matched in at least 20 of those top 300 reviews) are sorted by number of matches.  
+                | Additionally, the repeat products in the bottom 300 matches (0-1 words matched) are shown for comparison.
+            
+            a(href='/demo/1') See Demo Figure 1
