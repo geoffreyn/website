@@ -92,6 +92,8 @@ div#test-popup-resume > iframe {
   //height 400px
   font-size 20px
 
+div#figs
+    width:1000px
  
 #mainbody
   //background-color #D9DDFD
@@ -100,7 +102,14 @@ div#test-popup-resume > iframe {
   margin 125 px
   margin-left 85px
   //width 1000 px
-  
+         
+  #figs
+      margin 10px
+      margin-left 0px
+      
+      p
+        width = 400px
+        
 h1, h2
   margin 0
   font-size 22px
@@ -161,7 +170,49 @@ h1
   width: 250px
   margin: 20px
   background: #003073
+  
+#myChart
+    width: 410px
+    margin-left auto
+    margin-right auto
+    background: #EEE
+    padding: 5px 5px
+    
+        
+#listType  
+    width 500px
+    
+    table
+        border-collapse: separate
+        border-spacing: 1px
+        background: #CCC
+        font-size: 12pt
+        
+        th
+            background: #EEE
+            font-weight: 600
+            padding: 10px 20px
+            text-align: center
 
+        tbody
+            padding: 0
+            margin: 0
+            border-collapse: collapse
+            border-spacing: 0px
+            //width 50px
+            font-size: 8pt
+
+        td
+            background: #FFF
+            padding: 5px 10px
+            text-align: center
+            //width 50px
+    
+.inline
+      display: inline-block;
+      margin: 1em;
+     
+    
 #userList
     margin-left auto
     margin-right auto
@@ -170,7 +221,7 @@ h1
         border-collapse: separate
         border-spacing: 1px
         background: #CCC
-        widght 250px
+        width 250px
 
         th
             background: #EEE
@@ -243,8 +294,7 @@ footer
         margin-right auto
         width 70%
   
-    
-  
+ 
     #mainbody
       margin 75 px
       margin-left 50px
@@ -283,3 +333,38 @@ footer
         border: none;
         max-width 350px;
     }  
+    
+#chartLegend
+    //position relative
+    //z-index 1
+    background-color #CCC
+    width: 75%
+    margin-right auto
+    margin-left auto
+    padding 10px
+    
+    span.labelblock
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        width: 75px;
+      
+        span.colorblock
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            width: 20px;
+            height: 10px;
+            //position: absolute;
+            //top: 3px;
+            //bottom: 3px;
+
+        span.textblock
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            width: 50px;
+            height: 10px;
+            //position: absolute;
+            //top: 3px;
+            //bottom: 3px;
