@@ -15,7 +15,6 @@ var db = mongo.db("mongodb://localhost:27017/website", {native_parser:true});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var analytics = require('./routes/analytics');
 
 var geoffapp = connect();
 var mainapp = connect();
@@ -82,7 +81,6 @@ app.use(function(req,res,next) {
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/analytics', analytics);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
