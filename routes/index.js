@@ -50,7 +50,8 @@ router.get('/layout',auth,function(req, res, next) {
 
 /* GET demo page for Data Incubator Challenge Question 3 */
 router.get('/demo/:id',function(req, res, next) {
-  res.render('demo'+ req.params.id, { title: 'Data Incubator Challenge Question 3 Demo, figure: ' + req.params.id });
+  res.render('demo'+ req.params.id, { title: 'Data Incubator Challenge Question 3 Demo, figure: ' + req.params.id }
+    );
 });
 
 module.exports = router;
