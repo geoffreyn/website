@@ -91,6 +91,16 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
+app.use(function(err, req, res, next) {
+    res.status(500);
+    res.render('error', {
+        message: 'If you came here looking for demos, sorry, but there\'s only two for now.',
+        error: err
+    });
+});
+
+// development error handler
+// will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
