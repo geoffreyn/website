@@ -38,7 +38,6 @@ var app = express();
 
 
 var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
 app.set('port', process.env.PORT || 3000);
 server.listen(app.get('port'), function () {
     console.log("Express server listening on port " + app.get('port'));
@@ -84,31 +83,6 @@ app.use(function(req,res,next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/analytics', analytics);
-
-io.use(function(socket, next) {
-  var handshake = socket.request;
-  // make sure the handshake data looks good as before
-  // if error do this:
-    // next(new Error('not authorized');
-  // else just call next
-  next();
-});
-
-io.sockets.on('connection', function (socket) {
-    
-    socket.on('message', function (message) {
-        //console.log("Got message: " + message);
-        ip = socket.handshake.address;
-        url = message;
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
-    });
-
-    socket.on('disconnect', function () {
-        console.log("Socket disconnected");
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});
-    });
-
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
