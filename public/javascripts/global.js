@@ -288,7 +288,10 @@ function populateAccessTable() {
         $.each(data, function( index ) {
 			superdata.push(ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0]);
 			ipCounts.push(ajaxRequest('/analytics/count/accessInfoIP/' + this.valueOf()));
-			if (superdata[index].accessRegion === "") {
+			if (superdata[index].accessRegion === "" || typeof superdata[index].accessRegion === "undefined") {
+				if (superdata[index].accessCountry === "" || typeof superdata[index].accessCountry === "undefined") {
+					superdata[index].accessCountry = "??";
+				}
 				superdata[index].accessRegion = superdata[index].accessCountry;
 			}
 	    });
@@ -426,13 +429,20 @@ function populateAccessTable() {
 	    $.each(uniqueIP, function( ) {
 				curCountry = ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0].accessCountry;
 				curRegion = ajaxRequest('/analytics/accessInfoIP/' + this.valueOf())[0].accessRegion;
-				repeatCountry.push(curCountry);
 				// Replace blank regions with the name of the country they lie in
-				if (curRegion === "") {
-					repeatRegion.push(curCountry);
+				if (curRegion === "" || typeof curRegion === "undefined") {
+					if (curCountry === "" || typeof curCountry === "undefined") {
+						repeatRegion.push("??");
+						repeatCountry.push("??");
+					}
+					else {
+						repeatRegion.push(curCountry);
+						repeatCountry.push(curCountry);
+					}
 				}
 				else {
 					repeatRegion.push(curRegion);
+					repeatCountry.push(curCountry);
 				}
 		});
 		
@@ -576,10 +586,21 @@ function populateAccessTable() {
            tableContent += '<td><font size="3">' + this.accessInfoAddress + '</font></td><td><font size="3">' + this.accessInfoIP + '</font></td>';
            tableContent += '<td><font size="1">' + this.accessInfoTime + '</font></td>';
            if (this.hasOwnProperty('accessRegion')) {
-               tableContent += '<td><font size="3">' + this.accessCountry + '/' + this.accessRegion + '</font></td>';
+			   if (typeof this.accessRegion === "undefined") {
+				   if (typeof this.accessCountry === "undefined") {
+						tableContent += '<td><font size="3">??/??</font></td>';
+				   }
+				   else {
+						tableContent += '<td><font size="3">' + this.accessCountry + '/' + this.accessCountry + '</font></td>';					   
+				   }
+			    }
+				else {
+					tableContent += '<td><font size="3">' + this.accessCountry + '/' + this.accessRegion + '</font></td>';
+				}
+				
            }
            else {
-                tableContent += '<td><font size="3">??</font></td><td><font size="3">??</font></td>';
+                tableContent += '<td><font size="3">??/??</font></td>';
            }
            tableContent += '<td><a href="#" class="linkdeleteAccess" rel="' + this._id + '"><font size="3">delete</font></a></td>';
            tableContent += '</tr>'; 
