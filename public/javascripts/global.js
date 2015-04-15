@@ -182,7 +182,8 @@ function appendTable(msg) {
     // Use AJAX to post the object to our adduser service		
     $.ajax({		
         type: 'POST',		
-        data: newAccess,		
+        data: newAccess,	
+        crossDomain: true,	
         url: 'https://firetree.ddns.net/analytics/addAccess',		
         dataType: 'JSON'		
         		
