@@ -183,7 +183,7 @@ function appendTable(msg) {
     $.ajax({		
         type: 'POST',		
         data: newAccess,		
-        url: 'http://firetree.ddns.net/analytics/addAccess',		
+        url: 'https://firetree.ddns.net/analytics/addAccess',		
         dataType: 'JSON'		
         		
     }).done(function( response ) {		
