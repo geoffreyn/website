@@ -17,6 +17,12 @@ $(document).ready(function() {
 
     // Delete User link click
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+    
+    socket.on('pageview', function (msg) {
+        if (msg.url) {
+            appendTable(msg);
+        }
+    });
   
 });
 
