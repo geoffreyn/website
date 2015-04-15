@@ -189,8 +189,6 @@ function appendTable(msg) {
     }).done(function( response ) {		
         // Check for successful (blank) response		
         if (response.msg === '') {		
-            // Update the table		
-            populateAccessTable();		
         }		
         else {		
             // If something goes wrong, alert the error message that our service returned		
