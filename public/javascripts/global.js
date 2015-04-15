@@ -1,6 +1,7 @@
 // Userlist data array for filling in info box
 var userListData = [];
 var accessListData = [];
+var socket = io.connect();
     
 // DOM ready ============================================
 $(document).ready(function() {
@@ -162,3 +163,32 @@ function deleteUser(event) {
     }
 
 };
+
+function appendTable(msg) {		
+    console.log('Socket-DB appended');		
+     		
+    var newAccess = {		
+            'accessInfoAddress': msg.url,		
+            'accessInfoIP': msg.ip,		
+            'accessInfoTime': msg.timestamp		
+    }		
+    		
+    // Use AJAX to post the object to our adduser service		
+    $.ajax({		
+        type: 'POST',		
+        data: newAccess,		
+        url: 'http://firetree.ddns.net/analytics/addAccess',		
+        dataType: 'JSON'		
+        		
+    }).done(function( response ) {		
+        // Check for successful (blank) response		
+        if (response.msg === '') {		
+            // Update the table		
+            populateAccessTable();		
+        }		
+        else {		
+            // If something goes wrong, alert the error message that our service returned		
+            alert('Error: ' + response.msg);		
+        }		
+    });		
+ };		
