@@ -11,6 +11,14 @@ var stylus = require('stylus');
 var connect = require('connect');
 var vhost = require('vhost');
 var geoip = require('geoip-lite'); 
+var fs = require('fs');
+var https = require('https');
+var http = require('http');
+
+var options = {
+    key: fs.readFileSync('ssl/privkey.pem','utf8'),
+    cert: fs.readFileSync('ssl/certificate.pem','utf8')
+};
 
 // Database
 var mongo = require('mongoskin');
@@ -37,16 +45,23 @@ geoffapp.use(function(req, res, next) {
 });
 
   
+// var app = express(options);
 var app = express();
 
+// app.set('port', process.env.PORT || 3000);
 
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-app.set('port', process.env.PORT || 3000);
-server.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + app.get('port'));
+var port = 3000;
+var sslPort = 443;
+
+var server = http.createServer(app).listen(port, function() {
+    console.log('Express server listening on port ' + port);
 });
 
+var httpsServer = https.createServer(options,app).listen(sslPort, function () {
+    console.log('Secure Express server listening on port ' + sslPort);
+});
+
+var io = require('socket.io').listen(server);
 
 // add vhost routing for main app
 app.use(vhost('geoffrey.webhop.me', geoffapp));
@@ -86,6 +101,8 @@ app.use(function(req,res,next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/analytics', analytics);
+
+io.set("origins = *");
 
 io.use(function(socket, next) {
   //var handshake = socket.request;
