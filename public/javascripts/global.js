@@ -526,7 +526,7 @@ function populateAccessTable() {
             makeNewChart = true;
         }
         else {
-            if (locationChart.segments.length !== regionByIpCounts.length) {
+            if (locationChart.segments.length !== sortedRegionCounts.length) {
                 locationChart.destroy();
                 makeNewChart = true;
             }
@@ -538,10 +538,10 @@ function populateAccessTable() {
            // Create Pie Chart of first result
             var data1 = [
                 {
-                    value: regionByIpCounts[0],
+                    value: sortedRegionCounts[0],
                     color: colors[0],
                     highlight: highlights[0],
-                    label: uniqueRegion[0]
+                    label: sortedRegion[0]
                 }
             ];
           
@@ -558,11 +558,11 @@ function populateAccessTable() {
          
 
             // Pie chart is expandable for when new regions connect
-            $.each(regionByIpCounts, function (index) {
+            $.each(sortedRegionCounts, function (index) {
                 if (index > 0) {
                     locationChart.addData({
                         value: this,
-                        label: uniqueRegion[index],
+                        label: sortedRegion[index],
                         color: colors[index],
                         highlight: highlights[index]
                     });
