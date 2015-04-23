@@ -4,12 +4,12 @@ var basicAuth = require('basic-auth-connect');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'WebApp Listing' });
+  res.render('demoproposal', { title: 'WebApp Listing' });
 });
 
 /* GET home page2. */
 router.get('/index', function(req, res, next) {
-  res.render('index', { title: 'WebApp Listing' });
+  res.render('demoproposal', { title: 'WebApp Listing' });
 });
 
 /* GET Geoff's page. */
