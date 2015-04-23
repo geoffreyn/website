@@ -45,8 +45,10 @@ html
                         a(class='navbar-brand', href='http://geoffrey.webhop.me'): img(src='/images/home.gif', title='Home', alt='My Homepage')
                     #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
                         ul(class='nav navbar-nav pull-left')
+                            //li
+                            //    a(href='/index') My Projects
                             li
-                                a(href='/index') My Projects
+                                a(href='/demo/proposal') Project Proposal
                             li(class='dropdown') 
                                 a(href='#' class="dropdown-toggle pull-left" data-toggle="dropdown" role="button" aira-expanded="false") Links
                                 ul(class='dropdown-menu')
@@ -88,21 +90,11 @@ html
       
       
     block content
-        br
         
-    block demofooter
-        #mainbody
-            ul 
-                li
-                    a(href='/demo/proposal') View Full Proposal
-                li
-                    a(href='/demo/1') See Demo Figure 1
-                li
-                    a(href='/demo/2') See Demo Figure 2
-
+    hr
         
     footer
     
         | © Geoffrey Newman #{+new Date().getFullYear()}, Optimized for 
-        a(href='http://www.jikos.cz/~mikulas/links/') Links.
-    
+        a(href='http://www.jikos.cz/~mikulas/links/') Links
+        | .
