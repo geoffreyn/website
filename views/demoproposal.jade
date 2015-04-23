@@ -1,0 +1,51 @@
+extends layout
+
+block content
+
+    #mainbody
+     
+        #figs
+            h1
+                | Project Proposal
+            
+            br
+            p
+                | My proposed project is called Shopping Matcher.  The project is built around the idea that online shopping can be difficult.  While any item is just a few key strokes and a click away, if you know the name of it, it's harder to find what you're looking for when you only have a vague idea of some of the properties of your item of interest.
+
+                | This is why I came up with the idea for Shopping Matcher.  Through the parsing of reviewer comments from Amazon.com, it's possible to develop a natural language processing (NLP) approach to matching customers' search terms to products with similar review terms.
+
+                | A list of reviews for 2,441,053 products contains 34,686,770 reviews.  With an average of more than 10 reviews per product, it's highly likely that even fairly obscure search terms can be matched.
+
+                | Assuming that the customer will enter a phrase containing terms relevant to the product they are looking for, I propose to compare the individual words in their search phrase to the words of every product review in this database.  A similarity score will be determined as the number of words that match to individual reviews.
+
+                | Due to the extensiveness of the review database, it's not necessary to simply give the single item that has the highest match score.  That approach would likely lead to many false positives when reviewers make comments not relevant to the product description.
+
+                | To address this potential issue, I require that multiple reviews for the same product have a high match score.  This helps diminish the impact one reviewer's off-topic comments could have on the matching process.
+
+                | As a proof-of-concept, I began by extracting the text from all 581,933 reviews under the category "Clothing and Accessories."  I then decided on an arbitrary search phrase someone looking for clothing may type into a web search engine, and compared the component words of that phrase to every word in every review.  The number of words found in the review determine the similarity score between the search phrase and that particular product's review.  Figure 1 shows the analysis up to this point.
+
+                br
+                br
+                
+                a(class="image-link", href="/images/challenge3part1.png")
+                img(src='/images/challenge3part1.png', alt="Figure 1", title="Figure 1")
+           
+                br
+                br
+           
+                | This figure shows the amount of times the search term "I would like a straight fit pair of jeans that fit well." occurs in Amazon.com reviews for "Clothing & Accessories" over a period of 18 years. 581,933 reviews were compared. This suggests the viability of separating out a few products that match the string well from those product reviews with fewer word matches, since a small fraction of the reviews contain all of the words in the search phrase (47 out of 581,933 product reviews contain all of the search terms: 0.0081%; 1955 contain 10 or more of the words: 0.3359%).
+
+                | I would then take these similarity scores, and only consider the products that have similarity scores in the top 300, based on figure 1.  Within that list of top 300, the 5 products that have high similarity in the most reviews are selected as results for the search, and sorted by number of high-scoring reviews.  The worst 5 matches are also shown, that is products which most consistently have reviews with the fewest words that match the search phrase.  This is what figure 2 depicts.  
+
+                br
+                br
+                
+                a(class="image-link", href="/images/challenge3part2.png")
+                img#portrait(src='/images/challenge3part2.png', alt="Figure 2", title="Figure 2")
+                
+                br
+                br
+                
+                | This figure is based on the search term "I would like a straight fit pair of jeans that fit well." It shows the top results when comparing this string to the text of each Amazon.com review for "Clothing & Accessories" products collected over a period of 18 years. Each product can have multiple reviews, so the same product can be matched to the string multiple times if the reviews have similar words in them. The products that occur in the top 300 matches (In this case the same products had 10-all words matched in at least 20 of those top 300 reviews) are sorted by number of matches. These products are shown with green bars, the height of which is indicative of the number of reviews with at least 10 matched words. Additionally, the repeat products in the bottom 300 matches (0-1 words matched) are shown for comparison with red bars, of height corresponding to the number of reviews with one or fewer matched words.
+               
+            append demofooter
