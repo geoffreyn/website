@@ -4,15 +4,12 @@ var basicAuth = require('basic-auth-connect');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  // req.client.authorized ? 
-     // res.status(status).json({"status":"approved"}) :
-     // res.status(status).json({"status":"denied"}, 401);
-  res.render('index', { title: 'WebApp Listing' });
+  res.render('demoproposal', { title: 'Proposal Listing' });
 });
 
 /* GET home page2. */
 router.get('/index', function(req, res, next) {
-  res.render('index', { title: 'WebApp Listing' });
+  res.render('demoproposal', { title: 'Proposal Listing' });
 });
 
 /* GET Geoff's page. */
