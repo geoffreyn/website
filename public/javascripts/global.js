@@ -3,35 +3,9 @@
 // Data arrays for filling in info box
 var userListData = [];
 var socket = io.connect();
-<<<<<<< HEAD
-    
-// DOM ready ============================================
-$(document).ready(function() {
-    
-    // Populate the user table on intial page load
-    populateTable();
-    
-    // Username link click
-    $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
-
-    // Add User button click
-    $('#btnAddUser').on('click', addUser);
-
-    // Delete User link click
-    $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
-    
-    socket.on('pageview', function (msg) {
-        if (msg.url) {
-            appendTable(msg);
-        }
-    });
-  
-});
-=======
 
 // For loop variable
 var i, j = 0;
->>>>>>> master
 
 // Functions ============================================
 
@@ -172,38 +146,6 @@ function deleteUser(event) {
         return false;
 
     }
-
-<<<<<<< HEAD
-};
-
-function appendTable(msg) {		
-    console.log('Socket-DB appended');		
-     		
-    var newAccess = {		
-            'accessInfoAddress': msg.url,		
-            'accessInfoIP': msg.ip,		
-            'accessInfoTime': msg.timestamp		
-    }		
-    		
-    // Use AJAX to post the object to our adduser service		
-    $.ajax({		
-        type: 'POST',		
-        data: newAccess,	
-        crossDomain: true,	
-        url: 'https://firetree.ddns.net/analytics/addAccess',		
-        dataType: 'JSON'		
-        		
-    }).done(function( response ) {		
-        // Check for successful (blank) response		
-        if (response.msg === '') {		
-        }		
-        else {		
-            // If something goes wrong, alert the error message that our service returned		
-            alert('Error: ' + response.msg);		
-        }		
-    });		
- };		
-=======
 }
 
 //Helper functions for generating gradient
@@ -761,4 +703,3 @@ $(document).ready(function() {
         }
     });
 });
->>>>>>> master

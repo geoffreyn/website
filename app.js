@@ -120,20 +120,6 @@ io.use(function(socket, next) {
 });
 
 io.sockets.on('connection', function (socket) {
-    var ip = socket.handshake.address;
-    
-    socket.on('message', function (message) {
-        console.log('Got message from: ' + ip);
-        var url = message;
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'location': geoip.lookup(ip), 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
-    });
-
-    socket.on('disconnect', function () {
-        console.log('Socket disconnection from: ' + ip + ' in: ' + geoip.lookup(ip).country + '/' + geoip.lookup(ip).region);
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});
-    });
-
-io.sockets.on('connection', function (socket) {		
     		
     socket.on('message', function (message) {		
         //console.log("Got message: " + message);		
@@ -141,7 +127,8 @@ io.sockets.on('connection', function (socket) {
         url = message;		
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': 'heroku.com', 'url': url, 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});		
     });		
-        socket.on('disconnect', function () {		
+    
+    socket.on('disconnect', function () {		
         console.log("Socket disconnected");		
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});		
     });		
