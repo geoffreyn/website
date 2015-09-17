@@ -11,14 +11,7 @@ var stylus = require('stylus');
 var connect = require('connect');
 var vhost = require('vhost');
 var geoip = require('geoip-lite'); 
-var fs = require('fs');
-var https = require('https');
 var http = require('http');
-
-var options = {
-    key: fs.readFileSync('ssl/privkey.pem','utf8'),
-    cert: fs.readFileSync('ssl/certificate.pem','utf8')
-};
 
 // Database
 var mongo = require('mongoskin');
@@ -26,6 +19,7 @@ var db = mongo.db('mongodb://localhost:27017/website2', {native_parser:true});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var analytics = require('./routes/analytics');
 
 var geoffapp = connect();
 var mainapp = connect();
@@ -49,15 +43,10 @@ var app = express();
 // app.set('port', process.env.PORT || 3000);
 
 var port = 3000;
-var sslPort = 443;
 
 var server = http.createServer(app).listen(port, function() {
     console.log('Express server listening on port ' + port);
 
-});
-
-var httpsServer = https.createServer(options,app).listen(sslPort, function () {
-    console.log('Secure Express server listening on port ' + sslPort);
 });
 
 var io = require('socket.io').listen(server);
