@@ -35,19 +35,22 @@ html
                         a(class='navbar-brand', href='http://geoffreynewman.me'): img(src='/images/home.gif', title='Home', alt='My Homepage')
                     #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
                         ul(class='nav navbar-nav pull-left')
-                            //li
-                            //    a(href='/index') My Projects
-                            // li
-                                // a(href='/demo/proposal') Project Proposal
+                            li(class='dropdown')
+                                a(href='#' class="dropdown-toggle pull-left" data-toggle="dropdown" role="button" aira-expanded="false") Projects
+                                ul(class='dropdown-menu')
+                                    li(role='presentation')
+                                        a(href='http://baltimoretaxcredit.com') Baltimore Tax Credit Map
+                                    li(role='presentation')
+                                        a(href='demo/proposal') Product Suggestion Service
                             li(class='dropdown') 
                                 a(href='#' class="dropdown-toggle pull-left" data-toggle="dropdown" role="button" aira-expanded="false") Links
                                 ul(class='dropdown-menu')
+                                    //li(role='presentation')
+                                    //    a(role="menuitem", tabindex="-1", href='http://baltimoretaxcredit.com') Baltimore Tax Credit Mapping Project
                                     li(role='presentation')
                                         a(role="menuitem", tabindex="-1", href='http://neuroengineering.bme.jhu.edu') BCI Group
                                     li(role='presentation')
-                                        a(role="menuitem", tabindex="-1", href="/images/Geoffrey_portrait.jpg") My Photo
-                                    li(role='presentation')
-                                        a(role="menuitem", tabindex="-1", href='/files/Geoffrey_Newman_resume.html') My Resume (HTML)
+                                        a(role="menuitem", tabindex="-1", href="/images/Geoffrey_portrait.jpg") My Photos
                                     li(role='presentation')
                                         a(role="menuitem", tabindex="-1", href='/files/Geoffrey_Newman_resume.pdf') My Resume (PDF)
                                     li(role='presentation')
@@ -78,7 +81,7 @@ html
                                         input(type='image', src='/images/loupe.png', class='btn btn-default pull-right', title='Submit search to Google™', alt='submit search')
                             li(class="divider-vertical")
                             li
-                                a(href='/admin') Login
+                                 a(href='/admin') Login
       
       
     block content
