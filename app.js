@@ -39,13 +39,16 @@ geoffapp.use(function(req, res, next) {
   
 var app = express();
 
-var server = http.createServer(app).listen(process.env.PORT || 3000, function() {
+var port = process.env.PORT || 3000;
+
+var server = http.createServer(app).listen(port, function() {
     console.log('Express server listening on port ' + port);
 });
 
 // add vhost routing for main app
-app.use(vhost('geoffrey.webhop.me', geoffapp));
-app.use(vhost('geoff.webhop.me', geoffapp));
+app.use(vhost('geoffreynewman.me', geoffapp));
+//app.use(vhost('geoffrey.webhop.me', geoffapp));
+//app.use(vhost('geoff.webhop.me', geoffapp));
 app.use(vhost('firetree.ddns.net', mainapp));
 
 function compile(str, path) {
