@@ -29,11 +29,8 @@ router.post('/adduser', function(req, res) {
 router.delete('/deleteuser/:id', function(req, res) {
   var db = req.db;
   var userToDelete = req.params.id;
-  var userString = 'ObjectId("' + userToDelete + '")';
-  //db.collection('userList').remove({"_id": userString}, function(err, result) {
-  //db.collection('userList').remove({_id: db.collection('userList').id(userString)}, function(err, result) {
-    db.collection('userList').removeById(userToDelete, function(err, result) {
-        res.send((result === 1) ? { msg: '' } : { msg: userString + ' deletion error: ' + err + ' result: ' + result});
+  db.collection('userlist').removeById(userToDelete, function(err, result) { 
+        res.send((result === 1) ? { msg: '' } : { msg: userToDelete + ' deletion error: ' + err + ' result: ' + result});
   });
 });
 

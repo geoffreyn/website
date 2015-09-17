@@ -2,6 +2,7 @@ extends layout
 
 block content
     
+<<<<<<< HEAD
     include demofooter
 
     #mainbody
@@ -26,3 +27,25 @@ block content
                     | 581,933 reviews were compared.
                     | This suggests the viability of separating out a few products that match the string well from those product reviews with fewer word matches, since a small fraction of the reviews contain all of the words in the search phrase (47 out of 581,933 product reviews contain all of the search terms: 0.0081%; 1955 contain 10 or more of the words: 0.3359%).
                    
+=======
+    #mainbody
+    
+        #figs
+            h1= title
+            
+            br
+            
+            a(class="image-link", href="/images/challenge3part1.png")
+                img(src='/images/challenge3part1.png', alt="Figure 1", title="Figure 1")
+           
+            br
+            br
+           
+            p  
+                | This figure shows the amount of times the search term "I would like a straight fit pair of jeans that fit well."
+                | occurs in Amazon.com reviews for "Clothing & Accessories" over a period of 18 years.  
+                | 581,933 reviews were compared.
+                | This suggests the viability of separating out a few products that match the string well from those product reviews with fewer word matches, since a small fraction of the reviews contain all of the words in the search phrase (47 out of 581,933 product reviews contain all of the search terms: 0.0081%; 1955 contain 10 or more of the words: 0.3359%).
+               
+            append demofooter
+>>>>>>> master

@@ -4,12 +4,20 @@ var basicAuth = require('basic-auth-connect');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+<<<<<<< HEAD
   res.render('demoproposal', { title: 'WebApp Listing' });
+=======
+  res.render('geoffrey', { title: 'Geoffrey Newman' });
+>>>>>>> master
 });
 
 /* GET home page2. */
 router.get('/index', function(req, res, next) {
+<<<<<<< HEAD
   res.render('demoproposal', { title: 'WebApp Listing' });
+=======
+  res.render('geoffrey', { title: 'Geoffrey Newman' });
+>>>>>>> master
 });
 
 /* GET Geoff's page. */
@@ -50,8 +58,12 @@ router.get('/layout',auth,function(req, res, next) {
 
 /* GET demo page for Data Incubator Challenge Question 3 */
 router.get('/demo/:id',function(req, res, next) {
+<<<<<<< HEAD
   res.render('demo'+ req.params.id, { title: 'Data Incubator Challenge Question 3 Demo, figure: ' + req.params.id }
     );
+=======
+  res.render('demo'+ req.params.id, { title: 'Data Incubator Challenge Question 3 Demo, figure: ' + req.params.id });
+>>>>>>> master
 });
 
 module.exports = router;

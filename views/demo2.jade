@@ -1,6 +1,7 @@
 extends layout
 
 block content
+<<<<<<< HEAD
     
     include demofooter
 
@@ -60,3 +61,27 @@ block content
                             td Lee Womens Plus Hidden in Waist Side-Elastic Strecth Fabric Jean
                             td Columbia Boys 2-7 Steens Mountain Full Zip Fleece
                  
+=======
+
+    #mainbody
+     
+        #figs
+            h1= title
+
+            br
+            
+            a(class="image-link", href="/images/challenge3part2.png")
+                img#portrait(src='/images/challenge3part2.png', alt="Figure 2", title="Figure 2")
+
+            br
+            br
+            
+            p
+                | This figure is based on the search term "I would like a straight fit pair of jeans that fit well."
+                | It shows the top results when comparing this string to the text of each Amazon.com review for "Clothing & Accessories" products collected over a period of 18 years.  
+                | Each product can have multiple reviews, so the same product can be matched to the string multiple times if the reviews have similar words in them.
+                | The products that occur in the top 300 matches (In this case the same products had 10-all words matched in at least 20 of those top 300 reviews) are sorted by number of matches.  
+                | Additionally, the repeat products in the bottom 300 matches (0-1 words matched) are shown for comparison.
+               
+            append demofooter
+>>>>>>> master
