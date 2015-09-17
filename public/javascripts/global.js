@@ -2,7 +2,6 @@
 
 // Data arrays for filling in info box
 var userListData = [];
-var socket = io.connect();
 
 // For loop variable
 var i, j = 0;
@@ -696,10 +695,4 @@ $(document).ready(function() {
     // Delete Access log entry link click
     $('#accessList table tbody').on('click', 'td a.linkdeleteAccess', deleteAccess);
   
-    console.log('Global socket connected');
-    socket.on('pageview', function (msg) {
-        if (msg.url) {
-            appendTable(msg);
-        }
-    });
 });

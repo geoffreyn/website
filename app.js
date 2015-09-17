@@ -46,10 +46,7 @@ var port = 3000;
 
 var server = http.createServer(app).listen(port, function() {
     console.log('Express server listening on port ' + port);
-
 });
-
-var io = require('socket.io').listen(server);
 
 // add vhost routing for main app
 app.use(vhost('geoffrey.webhop.me', geoffapp));
@@ -96,34 +93,6 @@ app.use(function(req,res,next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/analytics', analytics);
-
-io.set("origins = *");
-
-io.use(function(socket, next) {
-  //var handshake = socket.request;
-  // make sure the handshake data looks good as before
-  // if error do this:
-    // next(new Error('not authorized');
-  // else just call next
-  next();
-});
-
-io.sockets.on('connection', function (socket) {
-    		
-    socket.on('message', function (message) {		
-        //console.log("Got message: " + message);		
-        ip = socket.handshake.address;		
-        url = message;		
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': 'heroku.com', 'url': url, 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});		
-    });		
-    
-    socket.on('disconnect', function () {		
-        console.log("Socket disconnected");		
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});		
-    });		
-		
-});
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

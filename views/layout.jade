@@ -17,17 +17,7 @@ html
     //on our web server and will be delivered faster to the client than our own server.
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
-    script(src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js")
     
-    script(type="text/javascript").
-        var socket = io.connect();
-        socket.on('connect', function() {
-            socket.send(window.location.href);
-        });
-        window.onhashchange = function() {
-            socket.send(window.location.href);
-        }
-
   body
 
     block navBar
