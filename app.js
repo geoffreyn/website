@@ -37,14 +37,9 @@ geoffapp.use(function(req, res, next) {
     next();
 });
   
-// var app = express(options);
 var app = express();
 
-// app.set('port', process.env.PORT || 3000);
-
-var port = 3000;
-
-var server = http.createServer(app).listen(port, function() {
+var server = http.createServer(app).listen(process.env.PORT || 3000, function() {
     console.log('Express server listening on port ' + port);
 });
 
