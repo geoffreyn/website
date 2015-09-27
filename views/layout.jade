@@ -48,16 +48,23 @@ html
                         ul(class='nav navbar-nav pull-left')
                             li(class='dropdown')
                                 a(href='#' class="dropdown-toggle pull-left" data-toggle="dropdown" role="button" aira-expanded="false") Projects
-                                ul(class='dropdown-menu')
+                                ul(class='dropdown-menu' role="menu" aria-labelledby="dLabel")
                                     li(role='presentation')
-                                        a(href='http://baltimoretaxcredit.com') Baltimore Tax Credit Map
+                                        a(tabindex="-1" href='http://baltimoretaxcredit.com') Baltimore Tax Credit Map
                                     li(role='presentation')
-                                        a(href='demo/proposal') Product Suggestion Service
+                                        a(tabindex="-1" href='demo/proposal') Product Suggestion Service
+                                    li(class="divider")
+                                    li(class="dropdown-header")
+                                        h4 Twitter Bots
+                                    li(role="presentation")
+                                        a(class='col-md-offset-1' role="menuitem", tabindex="-1", href='http://github.com/geoffreyn/CutePetsNYC') Cute Pets NYC
+                                    li(role="presentation")
+                                        a(class='col-md-offset-1' role="menuitem", tabindex="-1", href='http://github.com/geoffreyn/PixivTweeter') Pixiv Image
+                                                
+                                     
                             li(class='dropdown') 
                                 a(href='#' class="dropdown-toggle pull-left" data-toggle="dropdown" role="button" aira-expanded="false") Links
                                 ul(class='dropdown-menu')
-                                    //li(role='presentation')
-                                    //    a(role="menuitem", tabindex="-1", href='http://baltimoretaxcredit.com') Baltimore Tax Credit Mapping Project
                                     li(role='presentation')
                                         a(role="menuitem", tabindex="-1", href='http://neuroengineering.bme.jhu.edu') BCI Group
                                     li(role='presentation')
