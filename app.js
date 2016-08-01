@@ -17,7 +17,8 @@ var http = require('http');
 
 var options = {
     key: fs.readFileSync('ssl/privkey.pem','utf8'),
-    cert: fs.readFileSync('ssl/certificate.pem','utf8')
+    cert: fs.readFileSync('ssl/certificate.pem','utf8'),
+    passphrase: 'password'
 };
 
 // Database
@@ -50,7 +51,7 @@ var app = express();
 
 // app.set('port', process.env.PORT || 3000);
 
-var port = 3000;
+var port = 80;
 var sslPort = 443;
 
 var server = http.createServer(app).listen(port, function() {
@@ -122,11 +123,14 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length, 'ip': '***.' + ip.substring(ip.lastIndexOf('.') - 6), 'url': url, 'location': geoip.lookup(ip), 'xdomain': socket.handshake.xdomain, 'timestamp': new Date()});
     });
 
-    socket.on('disconnect', function () {
-        console.log('Socket disconnection from: ' + ip + ' in: ' + geoip.lookup(ip).country + '/' + geoip.lookup(ip).region);
-        io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});
-    });
-
+		socket.on('disconnect', function () {
+			
+			if (geoip.lookup(ip)) {
+				console.log('Socket disconnection from: ' + ip + ' in: ' + geoip.lookup(ip).country + '/' + geoip.lookup(ip).region);
+				io.sockets.emit('pageview', { 'connections': Object.keys(io.sockets.connected).length});
+				
+			}
+		});
 });
 
 // catch 404 and forward to error handler
